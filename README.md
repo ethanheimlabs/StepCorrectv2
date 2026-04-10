@@ -123,3 +123,4 @@ The fallback seed flow still supports:
 - Auth UI is scaffolded but not wired to Supabase auth yet
 - Reminder preferences, export, and delete actions are UI placeholders
 - Fear extraction is reserved but not implemented beyond schema support
+# Step-Correct-V2
