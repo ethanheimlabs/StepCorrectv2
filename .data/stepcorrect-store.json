@@ -1,0 +1,945 @@
+{
+  "profiles": {
+    "00000000-0000-0000-0000-000000000001": {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-10T01:16:13.811Z",
+      "fullName": "Friend",
+      "sobrietyDate": null,
+      "toneMode": "Gentle"
+    }
+  },
+  "inventoryEntries": {
+    "00000000-0000-0000-0000-000000000101": {
+      "id": "00000000-0000-0000-0000-000000000101",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-02T22:00:00.000Z",
+      "rawText": "I'm resentful at my sister",
+      "clarificationText": "Criticized my recovery in front of my mom",
+      "entryType": "resentment",
+      "confidence": {
+        "resentment": 0.93,
+        "fear": 0.18
+      },
+      "extractedResentment": {
+        "type": "resentment",
+        "who_or_what": "My sister",
+        "what_happened_facts": "She criticized my recovery in front of family and said I am still not doing enough",
+        "affects": {
+          "self_esteem": true,
+          "security": true,
+          "ambitions": false,
+          "personal_relations": true,
+          "sex_relations": false,
+          "pride": true,
+          "pocketbook": false
+        },
+        "my_part_controlled": "I keep chasing her approval and I have not been clear about what recovery conversations I am willing to have",
+        "defects_or_patterns": [
+          "people_pleasing",
+          "fear",
+          "control"
+        ],
+        "next_right_actions": [
+          "Call sponsor before talking to family again",
+          "Write a short 10th Step on the facts",
+          "Do not argue about recovery tonight"
+        ],
+        "shareable_sponsor_summary": "Resentful at my sister for criticizing my recovery in front of family. It hit self-esteem, security, pride, and relationships. My part is chasing approval instead of holding a boundary. I am calling my sponsor and writing the facts down."
+      },
+      "extractedFear": null,
+      "shareableSummary": "Resentful at my sister for criticizing my recovery in front of family. It hit self-esteem, security, pride, and relationships. My part is chasing approval instead of holding a boundary. I am calling my sponsor and writing the facts down.",
+      "status": "completed",
+      "deletedAt": null
+    },
+    "00000000-0000-0000-0000-000000000102": {
+      "id": "00000000-0000-0000-0000-000000000102",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-05T21:00:00.000Z",
+      "rawText": "I'm resentful at my boss",
+      "clarificationText": "Questioned whether I was reliable after I moved a meeting",
+      "entryType": "resentment",
+      "confidence": {
+        "resentment": 0.9,
+        "fear": 0.22
+      },
+      "extractedResentment": {
+        "type": "resentment",
+        "who_or_what": "My boss",
+        "what_happened_facts": "He questioned whether I was serious about work after I asked to move a meeting",
+        "affects": {
+          "self_esteem": true,
+          "security": true,
+          "ambitions": true,
+          "personal_relations": false,
+          "sex_relations": false,
+          "pride": true,
+          "pocketbook": true
+        },
+        "my_part_controlled": "I started defending myself before I had the facts and I let one comment turn into a whole story",
+        "defects_or_patterns": [
+          "defensiveness",
+          "fear",
+          "control"
+        ],
+        "next_right_actions": [
+          "Write the facts before replying",
+          "Ask one calm follow-up instead of assuming",
+          "Call sponsor if I stay spun up after work"
+        ],
+        "shareable_sponsor_summary": "Resentful at my boss for questioning my reliability after I moved a meeting. It hit self-esteem, security, ambitions, pride, and money fear. My part is reacting before I have the facts."
+      },
+      "extractedFear": null,
+      "shareableSummary": "Resentful at my boss for questioning my reliability after I moved a meeting. It hit self-esteem, security, ambitions, pride, and money fear. My part is reacting before I have the facts.",
+      "status": "completed",
+      "deletedAt": null
+    },
+    "00000000-0000-0000-0000-000000000103": {
+      "id": "00000000-0000-0000-0000-000000000103",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-08T00:00:00.000Z",
+      "rawText": "I'm resentful at my partner",
+      "clarificationText": "Brought up my last relapse in an argument",
+      "entryType": "resentment",
+      "confidence": {
+        "resentment": 0.91,
+        "fear": 0.24
+      },
+      "extractedResentment": {
+        "type": "resentment",
+        "who_or_what": "My partner",
+        "what_happened_facts": "She brought up my last relapse during an argument and used it to make her point",
+        "affects": {
+          "self_esteem": true,
+          "security": true,
+          "ambitions": false,
+          "personal_relations": true,
+          "sex_relations": false,
+          "pride": true,
+          "pocketbook": false
+        },
+        "my_part_controlled": "I was already loaded up, I kept pushing to be understood, and I did not pause before answering",
+        "defects_or_patterns": [
+          "resentment_loop",
+          "control",
+          "fear"
+        ],
+        "next_right_actions": [
+          "Pause before replying again",
+          "Write the facts instead of the speech",
+          "Talk it through with sponsor before making it bigger"
+        ],
+        "shareable_sponsor_summary": "Resentful at my partner for bringing up my last relapse during an argument. It hit self-esteem, security, pride, and the relationship. My part is staying in the fight after I am already lit up."
+      },
+      "extractedFear": null,
+      "shareableSummary": "Resentful at my partner for bringing up my last relapse during an argument. It hit self-esteem, security, pride, and the relationship. My part is staying in the fight after I am already lit up.",
+      "status": "completed",
+      "deletedAt": null
+    },
+    "00000000-0000-0000-0000-000000000104": {
+      "id": "00000000-0000-0000-0000-000000000104",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-09T20:00:00.000Z",
+      "rawText": "I'm resentful at my sister",
+      "clarificationText": "Told family I am still not doing enough in recovery",
+      "entryType": "resentment",
+      "confidence": {
+        "resentment": 0.94,
+        "fear": 0.21
+      },
+      "extractedResentment": {
+        "type": "resentment",
+        "who_or_what": "My sister",
+        "what_happened_facts": "She told family I am still not doing enough in recovery and kept pushing the point on a call",
+        "affects": {
+          "self_esteem": true,
+          "security": true,
+          "ambitions": false,
+          "personal_relations": true,
+          "sex_relations": false,
+          "pride": true,
+          "pocketbook": false
+        },
+        "my_part_controlled": "I am still looking for approval from her and I have not kept the conversation on my side of the street",
+        "defects_or_patterns": [
+          "people_pleasing",
+          "resentment_loop",
+          "control"
+        ],
+        "next_right_actions": [
+          "Call sponsor before replying to family",
+          "Write the facts before talking tonight",
+          "Do not argue by text today"
+        ],
+        "shareable_sponsor_summary": "Resentful at my sister for telling family I am not doing enough in recovery. It hit self-esteem, security, pride, and relationships. My part is chasing approval instead of keeping a boundary."
+      },
+      "extractedFear": null,
+      "shareableSummary": "Resentful at my sister for telling family I am not doing enough in recovery. It hit self-esteem, security, pride, and relationships. My part is chasing approval instead of keeping a boundary.",
+      "status": "completed",
+      "deletedAt": null
+    },
+    "fb6a9333-e0e8-499c-a3dc-df3a9e910b9a": {
+      "id": "fb6a9333-e0e8-499c-a3dc-df3a9e910b9a",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-10T01:15:01.719Z",
+      "rawText": "I/m resentful at Carly",
+      "clarificationText": "Criticized my recovery",
+      "entryType": "resentment",
+      "confidence": {
+        "resentment": 0.87,
+        "fear": 0.14
+      },
+      "extractedResentment": {
+        "type": "resentment",
+        "who_or_what": "Carly",
+        "what_happened_facts": "Criticized my recovery",
+        "affects": {
+          "self_esteem": true,
+          "security": false,
+          "ambitions": false,
+          "personal_relations": false,
+          "sex_relations": false,
+          "pride": true,
+          "pocketbook": false
+        },
+        "my_part_controlled": "I am replaying the situation, chasing a different outcome, and I need to focus on my response instead.",
+        "defects_or_patterns": [
+          "fear",
+          "control"
+        ],
+        "next_right_actions": [
+          "Reach out to sponsor before reacting",
+          "Write a short 10th Step on the facts",
+          "Pause and choose one clean response today"
+        ],
+        "shareable_sponsor_summary": "Resentful at carly for criticized my recovery. It hits self-esteem, pride. My part is i am replaying the situation, chasing a different outcome, and i need to focus on my response instead.. Next move is reach out to sponsor before reacting."
+      },
+      "extractedFear": null,
+      "shareableSummary": "Resentful at carly for criticized my recovery. It hits self-esteem, pride. My part is i am replaying the situation, chasing a different outcome, and i need to focus on my response instead.. Next move is reach out to sponsor before reacting.",
+      "status": "completed",
+      "deletedAt": null
+    }
+  },
+  "inventoryActions": {
+    "00000000-0000-0000-0000-000000000201": {
+      "id": "00000000-0000-0000-0000-000000000201",
+      "entryId": "00000000-0000-0000-0000-000000000101",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Call sponsor before talking to family again",
+      "completed": true,
+      "completedAt": "2026-04-02T23:30:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000202": {
+      "id": "00000000-0000-0000-0000-000000000202",
+      "entryId": "00000000-0000-0000-0000-000000000101",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Write a short 10th Step on the facts",
+      "completed": true,
+      "completedAt": "2026-04-03T00:00:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000203": {
+      "id": "00000000-0000-0000-0000-000000000203",
+      "entryId": "00000000-0000-0000-0000-000000000101",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Do not argue about recovery tonight",
+      "completed": true,
+      "completedAt": "2026-04-03T00:15:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000204": {
+      "id": "00000000-0000-0000-0000-000000000204",
+      "entryId": "00000000-0000-0000-0000-000000000102",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Write the facts before replying",
+      "completed": true,
+      "completedAt": "2026-04-05T22:00:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000205": {
+      "id": "00000000-0000-0000-0000-000000000205",
+      "entryId": "00000000-0000-0000-0000-000000000102",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Ask one calm follow-up instead of assuming",
+      "completed": false,
+      "completedAt": null
+    },
+    "00000000-0000-0000-0000-000000000206": {
+      "id": "00000000-0000-0000-0000-000000000206",
+      "entryId": "00000000-0000-0000-0000-000000000102",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Call sponsor if I stay spun up after work",
+      "completed": false,
+      "completedAt": null
+    },
+    "00000000-0000-0000-0000-000000000207": {
+      "id": "00000000-0000-0000-0000-000000000207",
+      "entryId": "00000000-0000-0000-0000-000000000103",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Pause before replying again",
+      "completed": true,
+      "completedAt": "2026-04-08T00:45:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000208": {
+      "id": "00000000-0000-0000-0000-000000000208",
+      "entryId": "00000000-0000-0000-0000-000000000103",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Write the facts instead of the speech",
+      "completed": true,
+      "completedAt": "2026-04-08T11:30:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000209": {
+      "id": "00000000-0000-0000-0000-000000000209",
+      "entryId": "00000000-0000-0000-0000-000000000103",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Talk it through with sponsor before making it bigger",
+      "completed": false,
+      "completedAt": null
+    },
+    "00000000-0000-0000-0000-000000000210": {
+      "id": "00000000-0000-0000-0000-000000000210",
+      "entryId": "00000000-0000-0000-0000-000000000104",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Call sponsor before replying to family",
+      "completed": false,
+      "completedAt": null
+    },
+    "00000000-0000-0000-0000-000000000211": {
+      "id": "00000000-0000-0000-0000-000000000211",
+      "entryId": "00000000-0000-0000-0000-000000000104",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Write the facts before talking tonight",
+      "completed": false,
+      "completedAt": null
+    },
+    "00000000-0000-0000-0000-000000000212": {
+      "id": "00000000-0000-0000-0000-000000000212",
+      "entryId": "00000000-0000-0000-0000-000000000104",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Do not argue by text today",
+      "completed": false,
+      "completedAt": null
+    },
+    "047a2395-2df2-4d06-aa55-38dd327e7705": {
+      "id": "047a2395-2df2-4d06-aa55-38dd327e7705",
+      "entryId": "fb6a9333-e0e8-499c-a3dc-df3a9e910b9a",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Reach out to sponsor before reacting",
+      "completed": false,
+      "completedAt": null
+    },
+    "de43a2fe-27b3-458d-b1f8-cc8aec58174a": {
+      "id": "de43a2fe-27b3-458d-b1f8-cc8aec58174a",
+      "entryId": "fb6a9333-e0e8-499c-a3dc-df3a9e910b9a",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Write a short 10th Step on the facts",
+      "completed": false,
+      "completedAt": null
+    },
+    "eacbf732-8073-4378-b3bc-1c8ed6f9b7fe": {
+      "id": "eacbf732-8073-4378-b3bc-1c8ed6f9b7fe",
+      "entryId": "fb6a9333-e0e8-499c-a3dc-df3a9e910b9a",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "actionText": "Pause and choose one clean response today",
+      "completed": false,
+      "completedAt": null
+    }
+  },
+  "inventoryEntryEmbeddings": {
+    "00000000-0000-0000-0000-000000000401": {
+      "id": "00000000-0000-0000-0000-000000000401",
+      "entryId": "00000000-0000-0000-0000-000000000101",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-02T22:00:00.000Z",
+      "sourceText": "Raw: I'm resentful at my sister\nClarification: Criticized my recovery in front of my mom\nWho or what: My sister\nFacts: She criticized my recovery in front of family and said I am still not doing enough\nMy part: I keep chasing her approval and I have not been clear about what recovery conversations I am willing to have\nPatterns: people_pleasing, fear, control\nActions: Call sponsor before talking to family again, Write a short 10th Step on the facts, Do not argue about recovery tonight",
+      "embedding": [
+        0.054384,
+        -0.046863,
+        0.062484,
+        -0.065955,
+        0.2239,
+        -0.089676,
+        0.186294,
+        -0.061905,
+        0.123811,
+        -0.193816,
+        0.112239,
+        -0.14001,
+        0.081576,
+        -0.093726,
+        0.054384,
+        -0.155052,
+        0.065955,
+        -0.077526,
+        0.015621,
+        -0.325147,
+        0.155631,
+        -0.171252,
+        0.062484,
+        -0.054384,
+        0.092569,
+        -0.112818,
+        0.062484,
+        -0.058434,
+        0.182244,
+        -0.078105,
+        0.194394,
+        -0.15216,
+        0.13191,
+        -0.155052,
+        0.128439,
+        -0.13596,
+        0.127282,
+        -0.139432,
+        0.174723,
+        -0.085626,
+        0.174723,
+        -0.209437,
+        0.085626,
+        -0.042813,
+        0.070005,
+        0,
+        0.202494,
+        -0.147531,
+        0.023142,
+        -0.085626,
+        0.054384,
+        -0.093147,
+        0.093726,
+        -0.089676,
+        0.097197,
+        -0.070005,
+        0.14811,
+        -0.015621,
+        0.081576,
+        -0.061905,
+        0.171831,
+        -0.124389,
+        0.147531,
+        -0.074055
+      ],
+      "model": "fallback-local-hash",
+      "dimensions": 64
+    },
+    "00000000-0000-0000-0000-000000000402": {
+      "id": "00000000-0000-0000-0000-000000000402",
+      "entryId": "00000000-0000-0000-0000-000000000102",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-05T21:00:00.000Z",
+      "sourceText": "Raw: I'm resentful at my boss\nClarification: Questioned whether I was reliable after I moved a meeting\nWho or what: My boss\nFacts: He questioned whether I was serious about work after I asked to move a meeting\nMy part: I started defending myself before I had the facts and I let one comment turn into a whole story\nPatterns: defensiveness, fear, control\nActions: Write the facts before replying, Ask one calm follow-up instead of assuming, Call sponsor if I stay spun up after work",
+      "embedding": [
+        0.147396,
+        -0.062183,
+        0.062183,
+        -0.065637,
+        0.284427,
+        -0.069667,
+        0.209578,
+        -0.081183,
+        0.209578,
+        -0.251033,
+        0.058152,
+        -0.077728,
+        0.138759,
+        -0.116304,
+        0.031091,
+        -0.096153,
+        0.085213,
+        -0.054122,
+        0.092698,
+        -0.185396,
+        0.073122,
+        -0.092698,
+        0.065637,
+        -0.077152,
+        0.034546,
+        -0.042607,
+        0.104789,
+        -0.054122,
+        0.14682,
+        -0.116304,
+        0.14682,
+        -0.054122,
+        0.238942,
+        -0.100759,
+        0.046061,
+        -0.236063,
+        0.165244,
+        -0.18482,
+        0.139335,
+        -0.096728,
+        0.081183,
+        -0.154881,
+        0.093274,
+        -0.081183,
+        0.271185,
+        -0.093274,
+        0.112274,
+        -0.14682,
+        0.034546,
+        -0.092698,
+        0.103638,
+        -0.061607,
+        0.065637,
+        -0.085213,
+        0.054122,
+        -0.104789,
+        0.069667,
+        -0.089243,
+        0.150274,
+        -0.069667,
+        0.031091,
+        -0.14682,
+        0.131274,
+        -0.096728
+      ],
+      "model": "fallback-local-hash",
+      "dimensions": 64
+    },
+    "00000000-0000-0000-0000-000000000403": {
+      "id": "00000000-0000-0000-0000-000000000403",
+      "entryId": "00000000-0000-0000-0000-000000000103",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-08T00:00:00.000Z",
+      "sourceText": "Raw: I'm resentful at my partner\nClarification: Brought up my last relapse in an argument\nWho or what: My partner\nFacts: She brought up my last relapse during an argument and used it to make her point\nMy part: I was already loaded up, I kept pushing to be understood, and I did not pause before answering\nPatterns: resentment_loop, control, fear\nActions: Pause before replying again, Write the facts instead of the speech, Talk it through with sponsor before making it bigger",
+      "embedding": [
+        0.104978,
+        -0.114028,
+        0.065159,
+        -0.173757,
+        0.1816,
+        -0.081448,
+        0.109805,
+        -0.15445,
+        0.125491,
+        -0.121268,
+        0.109201,
+        -0.126094,
+        0.056712,
+        -0.19427,
+        0.121268,
+        -0.129111,
+        0.198493,
+        -0.060332,
+        0,
+        -0.214179,
+        0.146004,
+        -0.068779,
+        0,
+        -0.060332,
+        0.126094,
+        -0.190046,
+        0.130317,
+        -0.032579,
+        0.226849,
+        -0.146607,
+        0.162294,
+        -0.01629,
+        0.193666,
+        -0.080845,
+        0.024133,
+        -0.142384,
+        0.16531,
+        -0.084465,
+        0.19427,
+        -0.146004,
+        0.133334,
+        -0.104978,
+        0.174963,
+        -0.097135,
+        0.032579,
+        -0.150227,
+        0.133937,
+        -0.137557,
+        0.17074,
+        -0.064555,
+        0.068779,
+        -0.085068,
+        0.028356,
+        -0.032579,
+        0.076622,
+        -0.097135,
+        0.198493,
+        -0.146004,
+        0.052489,
+        -0.032579,
+        0,
+        -0.060935,
+        0.129111,
+        -0.109805
+      ],
+      "model": "fallback-local-hash",
+      "dimensions": 64
+    },
+    "00000000-0000-0000-0000-000000000404": {
+      "id": "00000000-0000-0000-0000-000000000404",
+      "entryId": "00000000-0000-0000-0000-000000000104",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-09T20:00:00.000Z",
+      "sourceText": "Raw: I'm resentful at my sister\nClarification: Told family I am still not doing enough in recovery\nWho or what: My sister\nFacts: She told family I am still not doing enough in recovery and kept pushing the point on a call\nMy part: I am still looking for approval from her and I have not kept the conversation on my side of the street\nPatterns: people_pleasing, resentment_loop, control\nActions: Call sponsor before replying to family, Write the facts before talking tonight, Do not argue by text today",
+      "embedding": [
+        0.024711,
+        -0.028391,
+        0.056782,
+        -0.074132,
+        0.242374,
+        -0.162985,
+        0.091482,
+        -0.010515,
+        0.088327,
+        -0.200839,
+        0.158253,
+        -0.134068,
+        0.074132,
+        -0.038906,
+        0.084647,
+        -0.059936,
+        0.116192,
+        -0.154573,
+        0,
+        -0.285486,
+        0.158779,
+        -0.251312,
+        0.028391,
+        -0.035226,
+        0.080967,
+        -0.066771,
+        0.127759,
+        -0.095688,
+        0.119347,
+        -0.028391,
+        0.226076,
+        -0.038906,
+        0.137748,
+        -0.126707,
+        0.028391,
+        -0.124079,
+        0.183489,
+        -0.236591,
+        0.197685,
+        -0.074132,
+        0.116718,
+        -0.24658,
+        0.088327,
+        -0.088327,
+        0.063617,
+        -0.02103,
+        0.222921,
+        -0.063617,
+        0.031545,
+        -0.063617,
+        0.045741,
+        -0.092007,
+        0.127233,
+        -0.056256,
+        0.113564,
+        -0.077812,
+        0.148789,
+        -0.028391,
+        0.105677,
+        -0.074132,
+        0.085173,
+        -0.113038,
+        0.161933,
+        -0.014195
+      ],
+      "model": "fallback-local-hash",
+      "dimensions": 64
+    },
+    "244240cc-9b16-4beb-b0a1-229f676021e1": {
+      "id": "244240cc-9b16-4beb-b0a1-229f676021e1",
+      "createdAt": "2026-04-10T01:15:01.728Z",
+      "entryId": "fb6a9333-e0e8-499c-a3dc-df3a9e910b9a",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "sourceText": "Raw: I/m resentful at Carly\nClarification: Criticized my recovery\nWho or what: Carly\nFacts: Criticized my recovery\nMy part: I am replaying the situation, chasing a different outcome, and I need to focus on my response instead.\nPatterns: fear, control\nActions: Reach out to sponsor before reacting, Write a short 10th Step on the facts, Pause and choose one clean response today",
+      "embedding": [
+        0.060533,
+        -0.04086,
+        0.08172,
+        -0.117284,
+        0.23835,
+        -0.04086,
+        0.183114,
+        -0.091557,
+        0.0454,
+        -0.101393,
+        0.080963,
+        -0.117284,
+        0.04086,
+        -0.050697,
+        0.050697,
+        -0.136957,
+        0.121824,
+        0,
+        0.08172,
+        -0.354877,
+        0.152847,
+        -0.239107,
+        0,
+        -0.08626,
+        0.076423,
+        -0.015133,
+        0.14301,
+        0,
+        0.248187,
+        -0.04086,
+        0.248944,
+        -0.16798,
+        0.142254,
+        -0.091557,
+        0.152847,
+        -0.162684,
+        0.151334,
+        -0.075667,
+        0.17252,
+        -0.162684,
+        0.142254,
+        -0.050697,
+        0.137714,
+        -0.035563,
+        0.142254,
+        -0.071127,
+        0.173277,
+        -0.15209,
+        0.035563,
+        -0.19295,
+        0.08626,
+        -0.060533,
+        0.076423,
+        -0.015133,
+        0.071127,
+        -0.060533,
+        0.080963,
+        -0.06129,
+        0.015133,
+        -0.091557,
+        0.08172,
+        -0.06583,
+        0.13166,
+        -0.06129
+      ],
+      "model": "fallback-local-hash",
+      "dimensions": 64
+    }
+  },
+  "patternFeedback": {
+    "adfcb07c-c4ff-417a-a94f-b66ce8ed9645": {
+      "id": "adfcb07c-c4ff-417a-a94f-b66ce8ed9645",
+      "createdAt": "2026-04-10T01:12:57.258Z",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "timeframe": "weekly:2026-04-06",
+      "summary": {
+        "total_entries": 3,
+        "recurring_people_or_topics": [
+          "Carly",
+          "family",
+          "My partner",
+          "My sister"
+        ],
+        "top_affected_areas": [
+          "pride",
+          "self esteem",
+          "personal relations"
+        ],
+        "top_patterns": [
+          "control",
+          "fear",
+          "resentment loop"
+        ],
+        "similar_entry_count": 4,
+        "actions_that_help": [
+          "pause before reacting",
+          "write it out"
+        ],
+        "trend_notes": [
+          "sponsor outreach keeps getting left undone when this loop comes back.",
+          "You tend to do better when you take one clean action the same day.",
+          "Writing it out often shows up with steadier next-day check-ins.",
+          "Thursday is where this seems to come up most."
+        ],
+        "stats": {
+          "total_actions": 9,
+          "completed_actions": 2,
+          "action_completion_rate": 0.22,
+          "same_day_action_rate": 1,
+          "helpful_action_signals": [
+            "pause before reacting",
+            "write it out"
+          ],
+          "incomplete_action_loops": [
+            "sponsor outreach",
+            "write it out",
+            "pause before reacting"
+          ],
+          "top_trigger_subjects": [
+            "family",
+            "partner"
+          ],
+          "top_repeated_people": [
+            "Carly",
+            "My partner",
+            "My sister"
+          ],
+          "top_day_of_week": "Thursday",
+          "top_time_of_day": "evening"
+        }
+      },
+      "feedbackText": "Carly kept coming back this week, and it usually landed on pride. Sponsor outreach keeps getting left undone when this loop comes back.. Pause before reacting seems to help when you do it sooner.",
+      "model": "fallback-local"
+    }
+  },
+  "dailyCheckins": {
+    "00000000-0000-0000-0000-000000000301": {
+      "id": "00000000-0000-0000-0000-000000000301",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-02T12:00:00.000Z",
+      "mood": 4,
+      "craving": 6,
+      "halt": {
+        "hungry": false,
+        "angry": true,
+        "lonely": true,
+        "tired": false
+      },
+      "note": "Already carrying family stuff."
+    },
+    "00000000-0000-0000-0000-000000000302": {
+      "id": "00000000-0000-0000-0000-000000000302",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-03T12:00:00.000Z",
+      "mood": 6,
+      "craving": 3,
+      "halt": {
+        "hungry": false,
+        "angry": false,
+        "lonely": false,
+        "tired": false
+      },
+      "note": "Felt better after writing and reaching out."
+    },
+    "00000000-0000-0000-0000-000000000303": {
+      "id": "00000000-0000-0000-0000-000000000303",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-05T12:00:00.000Z",
+      "mood": 5,
+      "craving": 5,
+      "halt": {
+        "hungry": false,
+        "angry": true,
+        "lonely": false,
+        "tired": false
+      },
+      "note": "Work pressure."
+    },
+    "00000000-0000-0000-0000-000000000304": {
+      "id": "00000000-0000-0000-0000-000000000304",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-06T12:00:00.000Z",
+      "mood": 5,
+      "craving": 5,
+      "halt": {
+        "hungry": false,
+        "angry": false,
+        "lonely": false,
+        "tired": true
+      },
+      "note": "Still a little spun."
+    },
+    "00000000-0000-0000-0000-000000000305": {
+      "id": "00000000-0000-0000-0000-000000000305",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-07T12:00:00.000Z",
+      "mood": 4,
+      "craving": 6,
+      "halt": {
+        "hungry": false,
+        "angry": true,
+        "lonely": true,
+        "tired": false
+      },
+      "note": "Relationship argument still running in my head."
+    },
+    "00000000-0000-0000-0000-000000000306": {
+      "id": "00000000-0000-0000-0000-000000000306",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-08T12:00:00.000Z",
+      "mood": 7,
+      "craving": 3,
+      "halt": {
+        "hungry": false,
+        "angry": false,
+        "lonely": false,
+        "tired": false
+      },
+      "note": "Writing it out helped."
+    },
+    "00000000-0000-0000-0000-000000000307": {
+      "id": "00000000-0000-0000-0000-000000000307",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-09T13:00:00.000Z",
+      "mood": 6,
+      "craving": 4,
+      "halt": {
+        "hungry": false,
+        "angry": false,
+        "lonely": false,
+        "tired": false
+      },
+      "note": "Family call still tender but not as loaded."
+    },
+    "4940bcdd-d219-4dcc-9f57-3e2edcf9a41b": {
+      "id": "4940bcdd-d219-4dcc-9f57-3e2edcf9a41b",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-10T01:14:41.391Z",
+      "mood": 6,
+      "craving": 3,
+      "halt": {
+        "hungry": false,
+        "angry": false,
+        "lonely": false,
+        "tired": false
+      },
+      "note": null
+    },
+    "c247c8fa-0214-4f78-9f4d-4b5ce2c8b41a": {
+      "id": "c247c8fa-0214-4f78-9f4d-4b5ce2c8b41a",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2026-04-10T01:18:36.350Z",
+      "mood": 4,
+      "craving": 3,
+      "halt": {
+        "hungry": false,
+        "angry": false,
+        "lonely": false,
+        "tired": false
+      },
+      "note": null
+    }
+  },
+  "stepProgress": {
+    "00000000-0000-0000-0000-000000000501": {
+      "id": "00000000-0000-0000-0000-000000000501",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "stepNumber": 1,
+      "status": "completed",
+      "updatedAt": "2026-04-08T13:00:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000502": {
+      "id": "00000000-0000-0000-0000-000000000502",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "stepNumber": 2,
+      "status": "completed",
+      "updatedAt": "2026-04-07T13:00:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000503": {
+      "id": "00000000-0000-0000-0000-000000000503",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "stepNumber": 3,
+      "status": "in_progress",
+      "updatedAt": "2026-04-06T13:00:00.000Z"
+    },
+    "00000000-0000-0000-0000-000000000504": {
+      "id": "00000000-0000-0000-0000-000000000504",
+      "userId": "00000000-0000-0000-0000-000000000001",
+      "stepNumber": 4,
+      "status": "in_progress",
+      "updatedAt": "2026-04-05T13:00:00.000Z"
+    }
+  }
+}

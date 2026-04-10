@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "StepCorrect",
+    "slug": "stepcorrect-mobile-v2",
+    "scheme": "stepcorrect",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F3F5F8"
+      }
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
