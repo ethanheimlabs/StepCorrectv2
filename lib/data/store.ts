@@ -18,8 +18,9 @@ import type {
   Profile,
   StepProgress
 } from "@/lib/types";
+import { resolveWritableDataPath } from "@/lib/data/storage-path";
 
-const STORE_PATH = path.join(process.cwd(), ".data", "stepcorrect-store.json");
+const STORE_PATH = resolveWritableDataPath("stepcorrect-store.json");
 
 interface StepCorrectStore {
   profiles: Record<string, Profile>;

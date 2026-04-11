@@ -11,9 +11,10 @@ import type {
   InventoryStatus,
   StructuredReview
 } from "@/lib/inventory/types";
+import { resolveWritableDataPath } from "@/lib/data/storage-path";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 
-const STORE_PATH = path.join(process.cwd(), ".data", "inventory-entries.json");
+const STORE_PATH = resolveWritableDataPath("inventory-entries.json");
 const TABLE_NAME = "inventory_entries";
 
 type InventoryRow = {
