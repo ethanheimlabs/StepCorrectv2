@@ -11,9 +11,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
-    "mobile": "npm run dev --workspace @stepcorrect/mobile",
-    "mobile:typecheck": "npm run typecheck --workspace @stepcorrect/mobile"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",

@@ -35,7 +35,6 @@ App:
 - Supabase-ready repositories with local JSON fallback
 - OpenAI Responses API integration for live classification and resentment extraction
 - OpenAI Embeddings-based similarity memory and weekly pattern feedback
-- Expo Router React Native mobile app scaffold in `apps/mobile`
 - Shared StepCorrect core package in `packages/core`
 
 ## Local setup
@@ -75,20 +74,6 @@ If Supabase env vars are missing, StepCorrect runs in local demo mode using `.da
 If `OPENAI_API_KEY` is missing, or a model call fails, the web app falls back to deterministic local classification, extraction, and feedback logic.
 The first local demo store is seeded with a few historical resentment entries, actions, check-ins, and local fallback embeddings so pattern memory works immediately in dev mode.
 
-## Mobile app
-
-The newer standalone React Native app now lives in [mobile](mobile). The older scaffold remains in [apps/mobile](apps/mobile) as reference.
-
-The dedicated mobile build reuses shared StepCorrect types and deterministic fallback logic from [packages/core](packages/core), and ships with seeded local demo data so inventory, pattern cards, and weekly reflection work on first launch.
-
-Run it with:
-
-```bash
-cd mobile
-npm install
-npm run dev
-```
-
 ## Supabase schema
 
 Apply:
@@ -110,8 +95,6 @@ The live web flow now uses:
 - [build-pattern-summary.ts](lib/patterns/build-pattern-summary.ts)
 - [client.ts](lib/openai/client.ts)
 
-The mobile/shared package in [packages/core/src/inventory.ts](packages/core/src/inventory.ts) still uses deterministic local logic for now.
-
 The fallback seed flow still supports:
 
 - raw entry: `I’m resentful at my sister`
@@ -123,5 +106,3 @@ The fallback seed flow still supports:
 - Auth UI is scaffolded but not wired to Supabase auth yet
 - Reminder preferences, export, and delete actions are UI placeholders
 - Fear extraction is reserved but not implemented beyond schema support
-# Step-Correct-V2
-# Step-Correct-V2
