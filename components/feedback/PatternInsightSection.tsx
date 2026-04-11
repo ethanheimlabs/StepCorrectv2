@@ -1,6 +1,7 @@
 import type { FeedbackCardSet, PatternSummary } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+import { AIFallbackNotice } from "./AIFallbackNotice";
 import { FeedbackCardGrid } from "./FeedbackCardGrid";
 
 function buildMeta(summary: PatternSummary) {
@@ -30,10 +31,12 @@ function buildMeta(summary: PatternSummary) {
 export function PatternInsightSection({
   cards,
   summary,
+  showFallbackNotice = false,
   className
 }: {
   cards: FeedbackCardSet;
   summary: PatternSummary;
+  showFallbackNotice?: boolean;
   className?: string;
 }) {
   const meta = buildMeta(summary);
@@ -69,7 +72,10 @@ export function PatternInsightSection({
         ) : null}
       </div>
 
-      <FeedbackCardGrid cards={cards} />
+      <div className="space-y-4">
+        {showFallbackNotice ? <AIFallbackNotice /> : null}
+        <FeedbackCardGrid cards={cards} />
+      </div>
     </section>
   );
 }

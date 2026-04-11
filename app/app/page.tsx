@@ -7,6 +7,7 @@ import { SafetyNotice } from "@/components/app/safety-notice";
 import { PatternInsightSection } from "@/components/feedback/PatternInsightSection";
 import { InventoryCard } from "@/components/inventory/inventory-card";
 import { buttonVariants } from "@/components/ui/button";
+import { hasOpenAIApiKey } from "@/lib/openai/client";
 import { getLatestDailyCheckIn } from "@/lib/repositories/checkins";
 import {
   buildInventoryPatternInsights,
@@ -20,6 +21,7 @@ import { formatGreetingDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
+  const showFallbackNotice = !hasOpenAIApiKey();
   const user = await getCurrentUser();
   const [entries, steps, latestCheckIn] = await Promise.all([
     listInventoryEntries(user.id),
@@ -94,7 +96,11 @@ export default async function DashboardPage() {
           </SectionCard>
 
           {latestInsights ? (
-            <PatternInsightSection cards={latestInsights.cards} summary={latestInsights.summary} />
+            <PatternInsightSection
+              cards={latestInsights.cards}
+              summary={latestInsights.summary}
+              showFallbackNotice={showFallbackNotice}
+            />
           ) : null}
         </div>
 

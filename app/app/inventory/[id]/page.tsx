@@ -7,6 +7,7 @@ import { PatternInsightSection } from "@/components/feedback/PatternInsightSecti
 import { SponsorSummaryCard } from "@/components/inventory/sponsor-summary-card";
 import { buttonVariants } from "@/components/ui/button";
 import { AFFECT_LABELS } from "@/lib/constants";
+import { hasOpenAIApiKey } from "@/lib/openai/client";
 import { buildInventoryPatternInsights } from "@/lib/patterns/service";
 import { getInventoryEntry, listInventoryActions } from "@/lib/repositories/inventory";
 
@@ -17,6 +18,7 @@ export default async function InventoryDetailPage({
 }: {
   params: { id: string };
 }) {
+  const showFallbackNotice = !hasOpenAIApiKey();
   const entry = await getInventoryEntry(params.id);
 
   if (!entry || !entry.extractedResentment) {
@@ -127,8 +129,11 @@ export default async function InventoryDetailPage({
 
         <SponsorSummaryCard summary={entry.shareableSummary ?? ""} />
       </div>
-
-      <PatternInsightSection cards={insights.cards} summary={insights.summary} />
+      <PatternInsightSection
+        cards={insights.cards}
+        summary={insights.summary}
+        showFallbackNotice={showFallbackNotice}
+      />
     </div>
   );
 }

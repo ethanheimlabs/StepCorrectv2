@@ -1,9 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/signup/page": "app/signup/page.js",
-  "/api/check-in/route": "app/api/check-in/route.js",
-  "/app/page": "app/app/page.js",
-  "/app/inventory/new/page": "app/app/inventory/new/page.js",
-  "/app/check-in/page": "app/app/check-in/page.js",
-  "/app/inventory/[id]/page": "app/app/inventory/[id]/page.js"
-}
