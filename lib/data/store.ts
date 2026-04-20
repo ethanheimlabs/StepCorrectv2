@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import { randomUUID } from "crypto";
 import path from "path";
 
 import { buildInventoryEntryEmbeddingSourceText } from "@/lib/ai/embedding-source";
@@ -41,6 +42,127 @@ const EMPTY_STORE: StepCorrectStore = {
   dailyCheckins: {},
   stepProgress: {}
 };
+
+let storeWriteQueue = Promise.resolve();
+
+function buildFallbackStore() {
+  return process.env.NODE_ENV === "production" ? EMPTY_STORE : buildDemoSeedStore();
+}
+
+function recoverJsonDocument(raw: string) {
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  let endIndex = -1;
+
+  for (let index = 0; index < raw.length; index += 1) {
+    const char = raw[index];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+
+      if (char === "\\") {
+        escaped = true;
+        continue;
+      }
+
+      if (char === "\"") {
+        inString = false;
+      }
+
+      continue;
+    }
+
+    if (char === "\"") {
+      inString = true;
+      continue;
+    }
+
+    if (char === "{" || char === "[") {
+      depth += 1;
+      continue;
+    }
+
+    if (char === "}" || char === "]") {
+      depth -= 1;
+
+      if (depth === 0) {
+        endIndex = index + 1;
+        break;
+      }
+    }
+  }
+
+  if (endIndex === -1) {
+    return null;
+  }
+
+  const recovered = raw.slice(0, endIndex);
+
+  try {
+    JSON.parse(recovered);
+    return recovered;
+  } catch {
+    return null;
+  }
+}
+
+async function writeJsonAtomically(targetPath: string, value: StepCorrectStore) {
+  await fs.mkdir(path.dirname(targetPath), { recursive: true });
+
+  const tempPath = `${targetPath}.${process.pid}.${Date.now()}.${randomUUID()}.tmp`;
+  const content = JSON.stringify(value, null, 2);
+
+  await fs.writeFile(tempPath, content, "utf8");
+  await fs.rename(tempPath, targetPath);
+}
+
+async function withStoreWriteLock<T>(operation: () => Promise<T>) {
+  const nextOperation = storeWriteQueue.then(operation, operation);
+
+  storeWriteQueue = nextOperation.then(
+    () => undefined,
+    () => undefined
+  );
+
+  return nextOperation;
+}
+
+async function parseStoreFile() {
+  const content = await fs.readFile(STORE_PATH, "utf8");
+
+  try {
+    return JSON.parse(content) as StepCorrectStore;
+  } catch (error) {
+    const recovered = recoverJsonDocument(content);
+
+    if (recovered) {
+      const parsed = JSON.parse(recovered) as StepCorrectStore;
+      await fs.writeFile(STORE_PATH, recovered, "utf8");
+      return parsed;
+    }
+
+    const backupPath = `${STORE_PATH}.corrupt-${Date.now()}`;
+
+    try {
+      await fs.writeFile(backupPath, content, "utf8");
+    } catch {
+      // Best effort only. We still want to recover with a fresh store if backup fails.
+    }
+
+    const fallback = buildFallbackStore();
+    await writeJsonAtomically(STORE_PATH, fallback);
+
+    if (error instanceof Error) {
+      console.error(`Recovered from unreadable StepCorrect store at ${STORE_PATH}.`, error);
+    }
+
+    return fallback;
+  }
+}
 
 function isEmptyStore(store: StepCorrectStore) {
   return (
@@ -465,44 +587,38 @@ async function ensureStore() {
   try {
     await fs.access(STORE_PATH);
   } catch {
-    await fs.writeFile(
-      STORE_PATH,
-      JSON.stringify(
-        process.env.NODE_ENV === "production" ? EMPTY_STORE : buildDemoSeedStore(),
-        null,
-        2
-      ),
-      "utf8"
-    );
+    await writeJsonAtomically(STORE_PATH, buildFallbackStore());
     return;
   }
 
   if (process.env.NODE_ENV !== "production") {
-    const content = await fs.readFile(STORE_PATH, "utf8");
-    const parsed = JSON.parse(content) as StepCorrectStore;
+    const parsed = await parseStoreFile();
 
     if (isEmptyStore(parsed)) {
-      await fs.writeFile(STORE_PATH, JSON.stringify(buildDemoSeedStore(), null, 2), "utf8");
+      await writeJsonAtomically(STORE_PATH, buildDemoSeedStore());
     }
   }
 }
 
 export async function readStore() {
   await ensureStore();
-  const content = await fs.readFile(STORE_PATH, "utf8");
-  return JSON.parse(content) as StepCorrectStore;
+  return parseStoreFile();
 }
 
 export async function writeStore(store: StepCorrectStore) {
-  await ensureStore();
-  await fs.writeFile(STORE_PATH, JSON.stringify(store, null, 2), "utf8");
+  await withStoreWriteLock(async () => {
+    await ensureStore();
+    await writeJsonAtomically(STORE_PATH, store);
+  });
 }
 
 export async function updateStore(
   updater: (store: StepCorrectStore) => StepCorrectStore | Promise<StepCorrectStore>
 ) {
-  const current = await readStore();
-  const next = await updater(current);
-  await writeStore(next);
-  return next;
+  return withStoreWriteLock(async () => {
+    const current = await readStore();
+    const next = await updater(current);
+    await writeJsonAtomically(STORE_PATH, next);
+    return next;
+  });
 }
