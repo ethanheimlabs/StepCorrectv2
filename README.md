@@ -60,6 +60,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 OPENAI_API_KEY=
 OPENAI_MODEL=gpt-5.4
 OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+STEPCORRECT_ENABLE_DEMO_SEED=false
 ```
 
 4. Start the app:
@@ -73,6 +74,7 @@ npm run dev
 If Supabase env vars are missing, StepCorrect runs in local demo mode using `.data/stepcorrect-store.json`.
 If `OPENAI_API_KEY` is missing, or a model call fails, the web app falls back to deterministic local classification, extraction, and feedback logic.
 The first local demo store is seeded with a few historical resentment entries, actions, check-ins, and local fallback embeddings so pattern memory works immediately in dev mode.
+Set `STEPCORRECT_ENABLE_DEMO_SEED=true` in Vercel if you want production previews to open with seeded example data while you finish live Supabase wiring.
 
 ## Supabase schema
 

@@ -20,6 +20,7 @@ import type {
   StepProgress
 } from "@/lib/types";
 import { resolveWritableDataPath } from "@/lib/data/storage-path";
+import { shouldUseSeededFallbackStore } from "@/lib/runtime-mode";
 
 const STORE_PATH = resolveWritableDataPath("stepcorrect-store.json");
 
@@ -46,7 +47,7 @@ const EMPTY_STORE: StepCorrectStore = {
 let storeWriteQueue = Promise.resolve();
 
 function buildFallbackStore() {
-  return process.env.NODE_ENV === "production" ? EMPTY_STORE : buildDemoSeedStore();
+  return shouldUseSeededFallbackStore() ? buildDemoSeedStore() : EMPTY_STORE;
 }
 
 function recoverJsonDocument(raw: string) {

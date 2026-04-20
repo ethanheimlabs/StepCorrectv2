@@ -1,9 +1,11 @@
 import Link from "next/link";
 
+import { DemoModeNotice } from "@/components/app/demo-mode-notice";
 import { PublicShell } from "@/components/layout/public-shell";
 import { SafetyNotice } from "@/components/app/safety-notice";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { isLaunchDemoMode } from "@/lib/runtime-mode";
 
 const featureCards = [
   {
@@ -25,6 +27,8 @@ const featureCards = [
 ] as const;
 
 export default function HomePage() {
+  const showDemoModeNotice = isLaunchDemoMode();
+
   return (
     <PublicShell>
       <section className="mx-auto max-w-6xl px-4 pb-12 pt-10 sm:px-6 lg:px-8 lg:pt-16">
@@ -77,6 +81,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
         </div>
+        {showDemoModeNotice ? <DemoModeNotice className="mt-6 max-w-3xl" /> : null}
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">

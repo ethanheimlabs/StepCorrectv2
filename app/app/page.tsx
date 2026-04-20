@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { DemoModeNotice } from "@/components/app/demo-mode-notice";
 import { EmptyState } from "@/components/app/empty-state";
 import { PageHeader } from "@/components/app/page-header";
 import { SectionCard } from "@/components/app/section-card";
@@ -15,6 +16,7 @@ import {
 } from "@/lib/patterns/service";
 import { listInventoryActions, listInventoryEntries } from "@/lib/repositories/inventory";
 import { listStepProgress } from "@/lib/repositories/steps";
+import { isLaunchDemoMode } from "@/lib/runtime-mode";
 import { getCurrentUser } from "@/lib/session";
 import { formatGreetingDate } from "@/lib/utils";
 
@@ -22,6 +24,7 @@ export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const showFallbackNotice = !hasOpenAIApiKey();
+  const showDemoModeNotice = isLaunchDemoMode();
   const user = await getCurrentUser();
   const [entries, steps, latestCheckIn] = await Promise.all([
     listInventoryEntries(user.id),
@@ -40,6 +43,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {showDemoModeNotice ? <DemoModeNotice compact /> : null}
       <PageHeader
         eyebrow={formatGreetingDate()}
         title="How are you today?"
