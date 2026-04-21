@@ -1,6 +1,6 @@
 import { DEFAULT_TONE_MODE } from "@/lib/constants";
 import { readStore, updateStore } from "@/lib/data/store";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
 
 type ProfileRow = {
@@ -32,14 +32,20 @@ function toRow(profile: Profile): ProfileRow {
 }
 
 export async function getProfile(userId: string) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase.from("profiles").select("*").eq("id", userId).single();
 
-    if (!response.error && response.data) {
-      return fromRow(response.data as ProfileRow);
+    if (response.error) {
+      if (response.error.code === "PGRST116") {
+        return null;
+      }
+
+      throw response.error;
     }
+
+    return response.data ? fromRow(response.data as ProfileRow) : null;
   }
 
   const store = await readStore();
@@ -47,7 +53,7 @@ export async function getProfile(userId: string) {
 }
 
 export async function upsertProfile(profile: Profile) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -56,9 +62,11 @@ export async function upsertProfile(profile: Profile) {
       .select("*")
       .single();
 
-    if (!response.error && response.data) {
-      return fromRow(response.data as ProfileRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromRow(response.data as ProfileRow) : profile;
   }
 
   await updateStore((store) => ({

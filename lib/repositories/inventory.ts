@@ -1,5 +1,5 @@
 import { readStore, updateStore } from "@/lib/data/store";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { InventoryAction, InventoryEntry, ResentmentExtraction } from "@/lib/types";
 
 type InventoryEntryRow = {
@@ -98,7 +98,7 @@ function toActionRow(action: InventoryAction): InventoryActionRow {
 }
 
 export async function listInventoryEntries(userId: string) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -108,9 +108,11 @@ export async function listInventoryEntries(userId: string) {
       .is("deleted_at", null)
       .order("created_at", { ascending: false });
 
-    if (!response.error && response.data) {
-      return (response.data as InventoryEntryRow[]).map(fromEntryRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return (response.data as InventoryEntryRow[] | null)?.map(fromEntryRow) ?? [];
   }
 
   const store = await readStore();
@@ -121,7 +123,7 @@ export async function listInventoryEntries(userId: string) {
 }
 
 export async function getInventoryEntry(id: string) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -130,9 +132,15 @@ export async function getInventoryEntry(id: string) {
       .eq("id", id)
       .single();
 
-    if (!response.error && response.data) {
-      return fromEntryRow(response.data as InventoryEntryRow);
+    if (response.error) {
+      if (response.error.code === "PGRST116") {
+        return null;
+      }
+
+      throw response.error;
     }
+
+    return response.data ? fromEntryRow(response.data as InventoryEntryRow) : null;
   }
 
   const store = await readStore();
@@ -140,7 +148,7 @@ export async function getInventoryEntry(id: string) {
 }
 
 export async function createInventoryEntry(entry: InventoryEntry) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -149,9 +157,11 @@ export async function createInventoryEntry(entry: InventoryEntry) {
       .select("*")
       .single();
 
-    if (!response.error && response.data) {
-      return fromEntryRow(response.data as InventoryEntryRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromEntryRow(response.data as InventoryEntryRow) : entry;
   }
 
   await updateStore((store) => ({
@@ -179,7 +189,7 @@ export async function updateInventoryEntry(
     ...current,
     ...updates
   };
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -189,9 +199,11 @@ export async function updateInventoryEntry(
       .select("*")
       .single();
 
-    if (!response.error && response.data) {
-      return fromEntryRow(response.data as InventoryEntryRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromEntryRow(response.data as InventoryEntryRow) : nextEntry;
   }
 
   await updateStore((store) => ({
@@ -206,7 +218,7 @@ export async function updateInventoryEntry(
 }
 
 export async function listInventoryActions(entryId: string) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -215,9 +227,11 @@ export async function listInventoryActions(entryId: string) {
       .eq("entry_id", entryId)
       .order("id", { ascending: true });
 
-    if (!response.error && response.data) {
-      return (response.data as InventoryActionRow[]).map(fromActionRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return (response.data as InventoryActionRow[] | null)?.map(fromActionRow) ?? [];
   }
 
   const store = await readStore();
@@ -245,10 +259,14 @@ export async function replaceInventoryActions(
       completedAt: existing?.completedAt ?? null
     } satisfies InventoryAction;
   });
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
-    await supabase.from("inventory_actions").delete().eq("entry_id", entryId);
+    const deleteResponse = await supabase.from("inventory_actions").delete().eq("entry_id", entryId);
+
+    if (deleteResponse.error) {
+      throw deleteResponse.error;
+    }
 
     if (nextActions.length) {
       const response = await supabase
@@ -256,10 +274,14 @@ export async function replaceInventoryActions(
         .insert(nextActions.map(toActionRow))
         .select("*");
 
-      if (!response.error && response.data) {
-        return (response.data as InventoryActionRow[]).map(fromActionRow);
+      if (response.error) {
+        throw response.error;
       }
+
+      return (response.data as InventoryActionRow[] | null)?.map(fromActionRow) ?? nextActions;
     }
+
+    return [];
   }
 
   await updateStore((store) => {
@@ -282,7 +304,7 @@ export async function replaceInventoryActions(
 export async function toggleInventoryAction(actionId: string, completed: boolean) {
   const store = await readStore();
   const localAction = store.inventoryActions[actionId] ?? null;
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -295,9 +317,15 @@ export async function toggleInventoryAction(actionId: string, completed: boolean
       .select("*")
       .single();
 
-    if (!response.error && response.data) {
-      return fromActionRow(response.data as InventoryActionRow);
+    if (response.error) {
+      if (response.error.code === "PGRST116") {
+        return null;
+      }
+
+      throw response.error;
     }
+
+    return response.data ? fromActionRow(response.data as InventoryActionRow) : null;
   }
 
   if (!localAction) {

@@ -1,12 +1,17 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
+import { SignupForm } from "@/components/auth/signup-form";
 import { PublicShell } from "@/components/layout/public-shell";
-import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { getCurrentUser } from "@/lib/session";
 
-export default function SignupPage() {
+export default async function SignupPage() {
+  const user = await getCurrentUser();
+
+  if (user) {
+    redirect("/app");
+  }
+
   return (
     <PublicShell>
       <section className="mx-auto max-w-xl px-4 py-12 sm:px-6 lg:px-8">
@@ -17,33 +22,10 @@ export default function SignupPage() {
             </p>
             <h1 className="mt-3 font-serif text-4xl text-foreground">Create account</h1>
             <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              Auth is still an MVP placeholder. The full UI is ready, and demo access keeps the
-              product work moving.
+              Create your own account so your inventory stays attached to you and no one else.
             </p>
 
-            <div className="mt-6 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Name</Label>
-                <Input id="fullName" placeholder="Your name" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" placeholder="you@example.com" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" placeholder="••••••••" />
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-col gap-3">
-              <button className={buttonVariants()} type="button">
-                Create account
-              </button>
-              <Link className={buttonVariants({ variant: "outline" })} href="/app/inventory/new">
-                Use demo access
-              </Link>
-            </div>
+            <SignupForm />
           </CardContent>
         </Card>
       </section>

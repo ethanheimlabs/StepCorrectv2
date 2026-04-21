@@ -38,6 +38,16 @@ function buildGuidance({
 export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: "Log in to save a check-in."
+        },
+        { status: 401 }
+      );
+    }
+
     const payload = validateCheckIn(await request.json());
     await createDailyCheckIn({
       id: crypto.randomUUID(),

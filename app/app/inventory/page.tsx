@@ -5,12 +5,12 @@ import { PageHeader } from "@/components/app/page-header";
 import { InventoryCard } from "@/components/inventory/inventory-card";
 import { buttonVariants } from "@/components/ui/button";
 import { listInventoryEntries } from "@/lib/repositories/inventory";
-import { getCurrentUser } from "@/lib/session";
+import { requireCurrentUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function InventoryListPage() {
-  const user = await getCurrentUser();
+  const user = await requireCurrentUser();
   const entries = await listInventoryEntries(user.id);
 
   return (

@@ -2,12 +2,12 @@ import { PageHeader } from "@/components/app/page-header";
 import { SectionCard } from "@/components/app/section-card";
 import { SettingsForm } from "@/components/app/settings-form";
 import { getProfile } from "@/lib/repositories/profiles";
-import { getCurrentUser } from "@/lib/session";
+import { requireCurrentUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  const user = await getCurrentUser();
+  const user = await requireCurrentUser();
   const profile =
     (await getProfile(user.id)) ?? {
       id: user.id,

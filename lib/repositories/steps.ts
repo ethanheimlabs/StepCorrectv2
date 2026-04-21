@@ -1,6 +1,6 @@
 import { STEP_COPY } from "@/lib/constants";
 import { readStore, updateStore } from "@/lib/data/store";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { StepProgress } from "@/lib/types";
 
 type StepProgressRow = {
@@ -44,7 +44,7 @@ function buildDefaultSteps(userId: string) {
 }
 
 export async function listStepProgress(userId: string) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -53,12 +53,21 @@ export async function listStepProgress(userId: string) {
       .eq("user_id", userId)
       .order("step_number", { ascending: true });
 
-    if (!response.error && response.data && response.data.length) {
+    if (response.error) {
+      throw response.error;
+    }
+
+    if (response.data?.length) {
       return (response.data as StepProgressRow[]).map(fromRow);
     }
 
     const defaults = buildDefaultSteps(userId);
-    await supabase.from("step_progress").insert(defaults.map(toRow));
+    const insertResponse = await supabase.from("step_progress").insert(defaults.map(toRow));
+
+    if (insertResponse.error) {
+      throw insertResponse.error;
+    }
+
     return defaults;
   }
 

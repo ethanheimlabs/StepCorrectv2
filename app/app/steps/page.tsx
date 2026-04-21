@@ -2,12 +2,12 @@ import { PageHeader } from "@/components/app/page-header";
 import { StepCard } from "@/components/steps/step-card";
 import { STEP_COPY } from "@/lib/constants";
 import { listStepProgress } from "@/lib/repositories/steps";
-import { getCurrentUser } from "@/lib/session";
+import { requireCurrentUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function StepsPage() {
-  const user = await getCurrentUser();
+  const user = await requireCurrentUser();
   const progress = await listStepProgress(user.id);
   const progressByStep = new Map(progress.map((item) => [item.stepNumber, item.status]));
 

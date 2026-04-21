@@ -2,6 +2,10 @@ export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+export function hasSupabaseAuthEnv() {
+  return Boolean(supabaseUrl && supabaseAnonKey);
+}
+
 export function hasSupabaseEnv() {
   return Boolean(supabaseUrl && (supabaseServiceRoleKey || supabaseAnonKey));
 }

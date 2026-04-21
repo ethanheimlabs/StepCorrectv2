@@ -11,6 +11,16 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: "Log in to save settings."
+        },
+        { status: 401 }
+      );
+    }
+
     const payload = validateProfilePayload(await request.json());
     const toneMode = TONE_MODE_OPTIONS.includes(payload.toneMode as ToneMode)
       ? (payload.toneMode as ToneMode)

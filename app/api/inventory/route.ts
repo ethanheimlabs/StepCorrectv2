@@ -17,6 +17,15 @@ export async function POST(request: Request) {
     const rawText = validateRawText(body.rawText);
     const user = await getCurrentUser();
 
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: "Log in to start an inventory."
+        },
+        { status: 401 }
+      );
+    }
+
     if (wantsProgressStream(request)) {
       return createProgressStreamResponse(async (send) => {
         const { entry, classification } = await startInventory(

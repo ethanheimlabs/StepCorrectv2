@@ -1,5 +1,5 @@
 import { readStore, updateStore } from "@/lib/data/store";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { InventoryEntryEmbedding, PatternFeedbackRecord } from "@/lib/types";
 
 type InventoryEntryEmbeddingRow = {
@@ -80,7 +80,7 @@ function toPatternFeedbackRow(feedback: PatternFeedbackRecord): PatternFeedbackR
 }
 
 export async function getInventoryEntryEmbedding(entryId: string) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -89,9 +89,11 @@ export async function getInventoryEntryEmbedding(entryId: string) {
       .eq("entry_id", entryId)
       .maybeSingle();
 
-    if (!response.error && response.data) {
-      return fromEmbeddingRow(response.data as InventoryEntryEmbeddingRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromEmbeddingRow(response.data as InventoryEntryEmbeddingRow) : null;
   }
 
   const store = await readStore();
@@ -103,7 +105,7 @@ export async function getInventoryEntryEmbedding(entryId: string) {
 }
 
 export async function listInventoryEntryEmbeddings(userId: string, limit = 40) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -113,9 +115,11 @@ export async function listInventoryEntryEmbeddings(userId: string, limit = 40) {
       .order("created_at", { ascending: false })
       .limit(limit);
 
-    if (!response.error && response.data) {
-      return (response.data as InventoryEntryEmbeddingRow[]).map(fromEmbeddingRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return (response.data as InventoryEntryEmbeddingRow[] | null)?.map(fromEmbeddingRow) ?? [];
   }
 
   const store = await readStore();
@@ -138,7 +142,7 @@ export async function saveInventoryEntryEmbedding(
     createdAt: embedding.createdAt ?? existing?.createdAt ?? new Date().toISOString(),
     ...embedding
   };
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -149,9 +153,11 @@ export async function saveInventoryEntryEmbedding(
       .select("*")
       .single();
 
-    if (!response.error && response.data) {
-      return fromEmbeddingRow(response.data as InventoryEntryEmbeddingRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromEmbeddingRow(response.data as InventoryEntryEmbeddingRow) : nextEmbedding;
   }
 
   await updateStore((store) => ({
@@ -166,7 +172,7 @@ export async function saveInventoryEntryEmbedding(
 }
 
 export async function getPatternFeedbackRecord(userId: string, timeframe: string) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -176,9 +182,11 @@ export async function getPatternFeedbackRecord(userId: string, timeframe: string
       .eq("timeframe", timeframe)
       .maybeSingle();
 
-    if (!response.error && response.data) {
-      return fromPatternFeedbackRow(response.data as PatternFeedbackRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromPatternFeedbackRow(response.data as PatternFeedbackRow) : null;
   }
 
   const store = await readStore();
@@ -202,7 +210,7 @@ export async function savePatternFeedbackRecord(
     createdAt: feedback.createdAt ?? existing?.createdAt ?? new Date().toISOString(),
     ...feedback
   };
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -213,9 +221,11 @@ export async function savePatternFeedbackRecord(
       .select("*")
       .single();
 
-    if (!response.error && response.data) {
-      return fromPatternFeedbackRow(response.data as PatternFeedbackRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromPatternFeedbackRow(response.data as PatternFeedbackRow) : nextFeedback;
   }
 
   await updateStore((store) => ({

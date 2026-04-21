@@ -9,6 +9,7 @@ import {
   submitClarification,
   submitClarificationWithProgress
 } from "@/lib/inventory/workflow";
+import { getCurrentUser } from "@/lib/session";
 import { validateClarification } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -20,6 +21,16 @@ export async function POST(
   try {
     const body = (await request.json()) as { answer?: unknown };
     const answer = validateClarification(body.answer);
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: "Log in to continue this inventory."
+        },
+        { status: 401 }
+      );
+    }
 
     if (wantsProgressStream(request)) {
       return createProgressStreamResponse(async (send) => {

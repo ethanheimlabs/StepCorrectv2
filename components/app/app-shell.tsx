@@ -4,7 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { LogoutButton } from "@/components/app/logout-button";
 import { APP_NAV_ITEMS } from "@/lib/constants";
+import { hasSupabaseAuthEnv } from "@/lib/supabase/env";
 import { cn } from "@/lib/utils";
 
 export function AppShell({
@@ -65,6 +67,12 @@ export function AppShell({
               StepCorrect supports recovery routines. It does not replace meetings, a sponsor,
               therapy, medical care, or emergency services.
             </div>
+
+            {hasSupabaseAuthEnv() ? (
+              <div className="mt-4">
+                <LogoutButton />
+              </div>
+            ) : null}
           </div>
         </aside>
 

@@ -17,7 +17,7 @@ import {
 import { listInventoryActions, listInventoryEntries } from "@/lib/repositories/inventory";
 import { listStepProgress } from "@/lib/repositories/steps";
 import { isLaunchDemoMode } from "@/lib/runtime-mode";
-import { getCurrentUser } from "@/lib/session";
+import { requireCurrentUser } from "@/lib/session";
 import { formatGreetingDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +25,7 @@ export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
   const showFallbackNotice = !hasOpenAIApiKey();
   const showDemoModeNotice = isLaunchDemoMode();
-  const user = await getCurrentUser();
+  const user = await requireCurrentUser();
   const [entries, steps, latestCheckIn] = await Promise.all([
     listInventoryEntries(user.id),
     listStepProgress(user.id),

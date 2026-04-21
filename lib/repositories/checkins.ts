@@ -1,5 +1,5 @@
 import { readStore, updateStore } from "@/lib/data/store";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { DailyCheckIn } from "@/lib/types";
 
 type DailyCheckInRow = {
@@ -37,7 +37,7 @@ function toRow(checkIn: DailyCheckIn): DailyCheckInRow {
 }
 
 export async function createDailyCheckIn(checkIn: DailyCheckIn) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -46,9 +46,11 @@ export async function createDailyCheckIn(checkIn: DailyCheckIn) {
       .select("*")
       .single();
 
-    if (!response.error && response.data) {
-      return fromRow(response.data as DailyCheckInRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromRow(response.data as DailyCheckInRow) : checkIn;
   }
 
   await updateStore((store) => ({
@@ -63,7 +65,7 @@ export async function createDailyCheckIn(checkIn: DailyCheckIn) {
 }
 
 export async function getLatestDailyCheckIn(userId: string) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -74,9 +76,11 @@ export async function getLatestDailyCheckIn(userId: string) {
       .limit(1)
       .maybeSingle();
 
-    if (!response.error && response.data) {
-      return fromRow(response.data as DailyCheckInRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return response.data ? fromRow(response.data as DailyCheckInRow) : null;
   }
 
   const store = await readStore();
@@ -89,7 +93,7 @@ export async function getLatestDailyCheckIn(userId: string) {
 }
 
 export async function listDailyCheckIns(userId: string, limit = 30) {
-  const supabase = getSupabaseAdmin();
+  const supabase = createSupabaseServerClient();
 
   if (supabase) {
     const response = await supabase
@@ -99,9 +103,11 @@ export async function listDailyCheckIns(userId: string, limit = 30) {
       .order("created_at", { ascending: false })
       .limit(limit);
 
-    if (!response.error && response.data) {
-      return (response.data as DailyCheckInRow[]).map(fromRow);
+    if (response.error) {
+      throw response.error;
     }
+
+    return (response.data as DailyCheckInRow[] | null)?.map(fromRow) ?? [];
   }
 
   const store = await readStore();
