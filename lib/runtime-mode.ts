@@ -9,6 +9,10 @@ export function isDemoSeedEnabled() {
   return envFlag("STEPCORRECT_ENABLE_DEMO_SEED");
 }
 
+export function isPricingEnabled() {
+  return envFlag("STEPCORRECT_ENABLE_PRICING");
+}
+
 export function shouldUseSeededFallbackStore() {
   return !hasSupabaseEnv() && (process.env.NODE_ENV !== "production" || isDemoSeedEnabled());
 }

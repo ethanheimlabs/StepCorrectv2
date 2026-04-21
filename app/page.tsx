@@ -5,7 +5,7 @@ import { PublicShell } from "@/components/layout/public-shell";
 import { SafetyNotice } from "@/components/app/safety-notice";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { isLaunchDemoMode } from "@/lib/runtime-mode";
+import { isLaunchDemoMode, isPricingEnabled } from "@/lib/runtime-mode";
 
 const featureCards = [
   {
@@ -28,6 +28,7 @@ const featureCards = [
 
 export default function HomePage() {
   const showDemoModeNotice = isLaunchDemoMode();
+  const showPricing = isPricingEnabled();
 
   return (
     <PublicShell>
@@ -132,27 +133,32 @@ export default function HomePage() {
         <SafetyNotice />
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <Card className="overflow-hidden">
-          <CardContent className="flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Pricing
-              </p>
-              <h2 className="mt-3 font-serif text-4xl text-foreground">Simple premium access.</h2>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
-                Start with the core inventory flow, daily check-in, step hub, and sponsor-summary
-                sharing in one calm workspace.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] bg-primary px-6 py-5 text-primary-foreground">
-              <p className="text-sm font-semibold uppercase tracking-[0.16em]">MVP preview</p>
-              <p className="mt-2 text-4xl font-semibold">$12</p>
-              <p className="mt-2 text-sm text-primary-foreground/80">per month</p>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+      {showPricing ? (
+        <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <Card className="overflow-hidden">
+            <CardContent className="flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  Pricing
+                </p>
+                <h2 className="mt-3 font-serif text-4xl text-foreground">
+                  Simple premium access.
+                </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+                  Start with the core inventory flow, daily check-in, step hub, and
+                  sponsor-summary sharing in one calm workspace.
+                </p>
+              </div>
+              <div className="rounded-[1.5rem] bg-primary px-6 py-5 text-primary-foreground">
+                <p className="text-sm font-semibold uppercase tracking-[0.16em]">MVP preview</p>
+                <p className="mt-2 text-4xl font-semibold">$12</p>
+                <p className="mt-2 text-sm text-primary-foreground/80">per month</p>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+      ) : null}
+
     </PublicShell>
   );
 }

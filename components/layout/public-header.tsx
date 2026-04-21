@@ -1,16 +1,17 @@
 import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
+import { isPricingEnabled } from "@/lib/runtime-mode";
 import { cn } from "@/lib/utils";
 
-const links = [
-  { href: "/how-it-works", label: "How it works" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/safety", label: "Safety" },
-  { href: "/login", label: "Log in" }
-] as const;
-
 export function PublicHeader() {
+  const links = [
+    { href: "/how-it-works", label: "How it works" },
+    ...(isPricingEnabled() ? [{ href: "/pricing", label: "Pricing" }] : []),
+    { href: "/safety", label: "Safety" },
+    { href: "/login", label: "Log in" }
+  ] as const;
+
   return (
     <header className="sticky top-0 z-30 border-b border-border/70 bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">

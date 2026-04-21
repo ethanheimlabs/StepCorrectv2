@@ -1,10 +1,16 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { PublicShell } from "@/components/layout/public-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { isPricingEnabled } from "@/lib/runtime-mode";
 
 export default function PricingPage() {
+  if (!isPricingEnabled()) {
+    redirect("/");
+  }
+
   return (
     <PublicShell>
       <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
