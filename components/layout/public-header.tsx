@@ -1,3 +1,4 @@
+import type { Route } from "next";
 import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -5,12 +6,15 @@ import { isPricingEnabled } from "@/lib/runtime-mode";
 import { cn } from "@/lib/utils";
 
 export function PublicHeader() {
-  const links = [
-    { href: "/how-it-works", label: "How it works" },
-    ...(isPricingEnabled() ? [{ href: "/pricing", label: "Pricing" }] : []),
-    { href: "/safety", label: "Safety" },
-    { href: "/login", label: "Log in" }
-  ] as const;
+  const links: Array<{ href: Route; label: string }> = [
+    { href: "/how-it-works" as Route, label: "How it works" },
+    { href: "/safety" as Route, label: "Safety" },
+    { href: "/login" as Route, label: "Log in" }
+  ];
+
+  if (isPricingEnabled()) {
+    links.splice(1, 0, { href: "/pricing" as Route, label: "Pricing" });
+  }
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/70 bg-background/90 backdrop-blur">
