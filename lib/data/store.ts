@@ -211,9 +211,32 @@ function buildDemoSeedStore(): StepCorrectStore {
           pride: true,
           pocketbook: false
         },
+        affected_parts_detail: [
+          "My self-esteem",
+          "My pride",
+          "My security",
+          "My sense of being respected",
+          "My fear of being judged by family"
+        ],
+        felt_reactions: ["Angry", "Hurt", "Embarrassed", "Defensive", "Not good enough"],
         my_part_controlled:
           "I keep chasing her approval and I have not been clear about what recovery conversations I am willing to have",
+        fear_inventory: [
+          "That I am still not enough in recovery",
+          "That family will believe the worst about me",
+          "That I have to prove my worth to be respected"
+        ],
         defects_or_patterns: ["people_pleasing", "fear", "control"],
+        acceptance_needed: [
+          "She may not understand recovery the way I want her to.",
+          "I cannot control how she talks about me.",
+          "My recovery does not need her approval to be real."
+        ],
+        spiritual_truths: [
+          "My value is not decided by her opinion.",
+          "I can tell the truth and keep a boundary without retaliation.",
+          "Peace comes from right action, not from winning the argument."
+        ],
         next_right_actions: [
           "Call sponsor before talking to family again",
           "Write a short 10th Step on the facts",
@@ -253,9 +276,32 @@ function buildDemoSeedStore(): StepCorrectStore {
           pride: true,
           pocketbook: true
         },
+        affected_parts_detail: [
+          "My self-esteem",
+          "My job security",
+          "My pride",
+          "My future at work",
+          "My financial stability"
+        ],
+        felt_reactions: ["Angry", "Defensive", "Embarrassed", "Threatened"],
         my_part_controlled:
           "I started defending myself before I had the facts and I let one comment turn into a whole story",
+        fear_inventory: [
+          "That I look unreliable",
+          "That I could lose standing at work",
+          "That one comment means my future is at risk"
+        ],
         defects_or_patterns: ["defensiveness", "fear", "control"],
+        acceptance_needed: [
+          "I cannot control how every comment lands.",
+          "I do not need to turn one conversation into a full verdict.",
+          "I can respond better after I slow down."
+        ],
+        spiritual_truths: [
+          "My worth is not hanging on one person's tone.",
+          "Clarity comes from facts, not from panic.",
+          "I can stay teachable without collapsing."
+        ],
         next_right_actions: [
           "Write the facts before replying",
           "Ask one calm follow-up instead of assuming",
@@ -295,9 +341,31 @@ function buildDemoSeedStore(): StepCorrectStore {
           pride: true,
           pocketbook: false
         },
+        affected_parts_detail: [
+          "My self-esteem",
+          "My security in the relationship",
+          "My pride",
+          "My sense of being understood"
+        ],
+        felt_reactions: ["Angry", "Hurt", "Exposed", "Powerless"],
         my_part_controlled:
           "I was already loaded up, I kept pushing to be understood, and I did not pause before answering",
+        fear_inventory: [
+          "That my past will always be used against me",
+          "That I am not safe when conflict starts",
+          "That I will never be fully trusted"
+        ],
         defects_or_patterns: ["resentment_loop", "control", "fear"],
+        acceptance_needed: [
+          "I cannot erase my history by arguing harder.",
+          "I do not control what another person reaches for in conflict.",
+          "I can still choose a cleaner response."
+        ],
+        spiritual_truths: [
+          "My past does not cancel the work I am doing now.",
+          "I can pause before adding more damage.",
+          "Peace usually starts when I stop trying to win the exchange."
+        ],
         next_right_actions: [
           "Pause before replying again",
           "Write the facts instead of the speech",
@@ -337,9 +405,31 @@ function buildDemoSeedStore(): StepCorrectStore {
           pride: true,
           pocketbook: false
         },
+        affected_parts_detail: [
+          "My self-esteem",
+          "My pride",
+          "My security",
+          "My sense of being respected by family"
+        ],
+        felt_reactions: ["Angry", "Hurt", "Rejected", "Defensive"],
         my_part_controlled:
           "I am still looking for approval from her and I have not kept the conversation on my side of the street",
+        fear_inventory: [
+          "That I am still failing in recovery",
+          "That I will be judged by family",
+          "That I need her approval to feel okay"
+        ],
         defects_or_patterns: ["people_pleasing", "resentment_loop", "control"],
+        acceptance_needed: [
+          "She may not give me the validation I want.",
+          "I cannot control what she says to family.",
+          "My recovery can stay solid without her approval."
+        ],
+        spiritual_truths: [
+          "My worth does not rise or fall with her opinion.",
+          "Right action matters more than winning the family narrative.",
+          "I can keep a boundary and stay at peace."
+        ],
         next_right_actions: [
           "Call sponsor before replying to family",
           "Write the facts before talking tonight",

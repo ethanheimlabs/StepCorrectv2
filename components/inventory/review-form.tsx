@@ -15,6 +15,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { ResentmentExtraction } from "@/lib/types";
 
+function listToTextarea(values: string[]) {
+  return values.join("\n");
+}
+
+function textareaToList(value: string) {
+  return value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 export function ReviewForm({
   id,
   initialValue,
@@ -63,7 +74,7 @@ export function ReviewForm({
     <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="grid gap-5 md:grid-cols-2">
         <div className="space-y-3">
-          <Label htmlFor="who_or_what">Who / What</Label>
+          <Label htmlFor="who_or_what">Who am I resentful at?</Label>
           <Input
             id="who_or_what"
             value={review.who_or_what}
@@ -74,7 +85,7 @@ export function ReviewForm({
         </div>
 
         <div className="space-y-3">
-          <Label htmlFor="my_part_controlled">My part</Label>
+          <Label htmlFor="my_part_controlled">What was my part?</Label>
           <Textarea
             id="my_part_controlled"
             className="min-h-[140px]"
@@ -87,13 +98,13 @@ export function ReviewForm({
             }
           />
           <p className="text-sm leading-6 text-muted-foreground">
-            My part = what I can control.
+            Keep this to what you can own, change, or do differently now.
           </p>
         </div>
       </div>
 
       <div className="space-y-3">
-        <Label htmlFor="what_happened_facts">What happened (facts)</Label>
+        <Label htmlFor="what_happened_facts">What happened?</Label>
         <Textarea
           id="what_happened_facts"
           className="min-h-[160px]"
@@ -108,6 +119,44 @@ export function ReviewForm({
         <p className="text-sm leading-6 text-muted-foreground">Facts only. No judgments.</p>
       </div>
 
+      <div className="grid gap-5 md:grid-cols-2">
+        <div className="space-y-3">
+          <Label htmlFor="affected_parts_detail">What part of me was affected?</Label>
+          <Textarea
+            id="affected_parts_detail"
+            className="min-h-[180px]"
+            value={listToTextarea(review.affected_parts_detail)}
+            onChange={(event) =>
+              setReview((current) => ({
+                ...current,
+                affected_parts_detail: textareaToList(event.target.value)
+              }))
+            }
+          />
+          <p className="text-sm leading-6 text-muted-foreground">
+            One short line per area that got hit.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="felt_reactions">What did it make me feel?</Label>
+          <Textarea
+            id="felt_reactions"
+            className="min-h-[180px]"
+            value={listToTextarea(review.felt_reactions)}
+            onChange={(event) =>
+              setReview((current) => ({
+                ...current,
+                felt_reactions: textareaToList(event.target.value)
+              }))
+            }
+          />
+          <p className="text-sm leading-6 text-muted-foreground">
+            Keep each line short and plain.
+          </p>
+        </div>
+      </div>
+
       <div className="space-y-3">
         <Label>Affects my…</Label>
         <AffectsToggleGroup
@@ -116,8 +165,40 @@ export function ReviewForm({
         />
       </div>
 
+      <div className="grid gap-5 md:grid-cols-2">
+        <div className="space-y-3">
+          <Label htmlFor="fear_inventory">What was I afraid of?</Label>
+          <Textarea
+            id="fear_inventory"
+            className="min-h-[180px]"
+            value={listToTextarea(review.fear_inventory)}
+            onChange={(event) =>
+              setReview((current) => ({
+                ...current,
+                fear_inventory: textareaToList(event.target.value)
+              }))
+            }
+          />
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="acceptance_needed">What do I need to accept?</Label>
+          <Textarea
+            id="acceptance_needed"
+            className="min-h-[180px]"
+            value={listToTextarea(review.acceptance_needed)}
+            onChange={(event) =>
+              setReview((current) => ({
+                ...current,
+                acceptance_needed: textareaToList(event.target.value)
+              }))
+            }
+          />
+        </div>
+      </div>
+
       <div className="space-y-3">
-        <Label>Patterns</Label>
+        <Label>What character defects showed up?</Label>
         <PatternChips
           value={review.defects_or_patterns}
           onChange={(defects_or_patterns) =>
@@ -127,7 +208,25 @@ export function ReviewForm({
       </div>
 
       <div className="space-y-3">
-        <Label>Next right actions</Label>
+        <Label htmlFor="spiritual_truths">What is the spiritual truth?</Label>
+        <Textarea
+          id="spiritual_truths"
+          className="min-h-[160px]"
+          value={listToTextarea(review.spiritual_truths)}
+          onChange={(event) =>
+            setReview((current) => ({
+              ...current,
+              spiritual_truths: textareaToList(event.target.value)
+            }))
+          }
+        />
+        <p className="text-sm leading-6 text-muted-foreground">
+          Keep it grounded and practical, not preachy.
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        <Label>What is the corrective action?</Label>
         <EditableActionList
           value={review.next_right_actions.map((action) => ({
             id: action,

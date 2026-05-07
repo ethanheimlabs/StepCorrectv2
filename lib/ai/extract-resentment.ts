@@ -20,8 +20,13 @@ const resentmentExtractionSchema = z.object({
   who_or_what: z.string(),
   what_happened_facts: z.string(),
   affects: affectsSchema,
+  affected_parts_detail: z.array(z.string()),
+  felt_reactions: z.array(z.string()),
   my_part_controlled: z.string(),
+  fear_inventory: z.array(z.string()),
   defects_or_patterns: z.array(z.string()),
+  acceptance_needed: z.array(z.string()),
+  spiritual_truths: z.array(z.string()),
   next_right_actions: z.array(z.string()).max(3),
   shareable_sponsor_summary: z.string()
 });
@@ -82,8 +87,11 @@ function buildSummary(extraction: Omit<ResentmentExtraction, "shareable_sponsor_
   const affectsLine = activeAffects.length
     ? activeAffects.join(", ")
     : "my peace and perspective";
+  const firstFear = extraction.fear_inventory[0]?.toLowerCase();
+  const fearLine = firstFear ? ` Under it, I'm afraid ${firstFear}.` : "";
+  const myPartLine = extraction.my_part_controlled.replace(/\s+/g, " ").trim().toLowerCase();
 
-  return `Resentful at ${extraction.who_or_what.toLowerCase()} for ${extraction.what_happened_facts.toLowerCase()}. It hits ${affectsLine}. My part is ${extraction.my_part_controlled.toLowerCase()}. Next move is ${extraction.next_right_actions[0].toLowerCase()}.`;
+  return `Resentful at ${extraction.who_or_what.toLowerCase()} for ${extraction.what_happened_facts.toLowerCase()}. It hits ${affectsLine}.${fearLine} My part is ${myPartLine}. Next move is ${extraction.next_right_actions[0].toLowerCase()}.`;
 }
 
 function extractResentmentFallback(
@@ -112,13 +120,40 @@ function extractResentmentFallback(
         pride: true,
         pocketbook: false
       },
+      affected_parts_detail: [
+        "My self-esteem",
+        "My pride",
+        "My security",
+        "My sense of being respected",
+        "My fear of being judged by family"
+      ],
+      felt_reactions: ["Angry", "Hurt", "Embarrassed", "Defensive", "Not good enough"],
       my_part_controlled:
-        "I am seeking her approval and not clearly setting boundaries around my recovery",
+        [
+          "I am seeking her approval instead of grounding in my own recovery work.",
+          "I have not clearly set boundaries around what recovery conversations I will have with her.",
+          "I am letting her reaction mean too much about my worth."
+        ].join("\n"),
+      fear_inventory: [
+        "That I am still failing in recovery",
+        "That my family will believe her version of me",
+        "That I will not be respected unless I prove myself"
+      ],
       defects_or_patterns: [
         "people_pleasing",
         "fear",
         "resentment_loop",
         "control"
+      ],
+      acceptance_needed: [
+        "She may not understand recovery the way I want her to.",
+        "I cannot control how she talks about me.",
+        "My recovery does not need her approval to be real."
+      ],
+      spiritual_truths: [
+        "My value is not decided by her opinion.",
+        "I can tell the truth and keep a boundary without retaliation.",
+        "Peace comes from right action, not from winning the argument."
       ],
       next_right_actions: [
         "Call or text sponsor and talk through the resentment",
@@ -135,9 +170,30 @@ function extractResentmentFallback(
     who_or_what: deriveWhoOrWhat(rawText),
     what_happened_facts: clarificationText.trim() || rawText.trim(),
     affects: buildAffects(rawText, clarificationText),
+    affected_parts_detail: ["My self-esteem", "My security", "My need for respect"],
+    felt_reactions: ["Angry", "Hurt", "Thrown off"],
     my_part_controlled:
-      "I am replaying the situation, chasing a different outcome, and I need to focus on my response instead.",
+      [
+        "I am replaying the situation and feeding the resentment.",
+        "I am wanting a different outcome from something I cannot control.",
+        "I need to focus on my response instead of their behavior."
+      ].join("\n"),
+    fear_inventory: [
+      "That this means something bad about me",
+      "That I am losing control of the situation",
+      "That I will not be okay if they do not change"
+    ],
     defects_or_patterns: ["fear", "control"],
+    acceptance_needed: [
+      "I cannot force a different version of what happened.",
+      "I cannot make another person respond the way I want.",
+      "I can still choose a clean response today."
+    ],
+    spiritual_truths: [
+      "My peace does not have to depend on their behavior.",
+      "I can return to honesty, humility, and right action.",
+      "I do not need to stay fused to the resentment."
+    ],
     next_right_actions: [
       "Reach out to sponsor before reacting",
       "Write a short 10th Step on the facts",
@@ -207,8 +263,27 @@ async function extractResentmentWithAI(
       ...EMPTY_AFFECT_FLAGS,
       ...parsed.affects
     },
+    affected_parts_detail: sanitizeArray(parsed.affected_parts_detail, [
+      "My self-esteem",
+      "My security",
+      "My need for respect"
+    ]),
+    felt_reactions: sanitizeArray(parsed.felt_reactions, ["Angry", "Hurt", "Thrown off"]),
     my_part_controlled: parsed.my_part_controlled.trim(),
+    fear_inventory: sanitizeArray(parsed.fear_inventory, [
+      "That this means something bad about me",
+      "That I am losing control of the situation",
+      "That I will not be okay if they do not change"
+    ]),
     defects_or_patterns: sanitizeArray(parsed.defects_or_patterns, ["fear", "control"]),
+    acceptance_needed: sanitizeArray(parsed.acceptance_needed, [
+      "I cannot force a different version of what happened.",
+      "I cannot make another person respond the way I want."
+    ]),
+    spiritual_truths: sanitizeArray(parsed.spiritual_truths, [
+      "My peace does not have to depend on their behavior.",
+      "I can return to honesty, humility, and right action."
+    ]),
     next_right_actions: sanitizeArray(
       parsed.next_right_actions,
       [

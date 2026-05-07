@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { BrandMark } from "@/components/layout/brand-mark";
 import { LogoutButton } from "@/components/app/logout-button";
 import { APP_NAV_ITEMS } from "@/lib/constants";
 import { hasSupabaseAuthEnv } from "@/lib/supabase/env";
@@ -24,17 +25,7 @@ export function AppShell({
         <aside className="lg:w-[280px] lg:flex-none">
           <div className="rounded-[2rem] border border-border/70 bg-white/85 p-5 shadow-panel backdrop-blur">
             <div className="flex items-center justify-between gap-4 lg:block">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                  StepCorrect
-                </p>
-                <h1 className="mt-2 font-serif text-2xl leading-tight text-foreground">
-                  Clear your head.
-                </h1>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Take the next right action.
-                </p>
-              </div>
+              <BrandMark className="min-w-0" variant="sidebar" />
 
               <div className="rounded-full border border-border/70 bg-secondary/60 px-4 py-2 text-sm font-medium text-secondary-foreground">
                 {fullName}

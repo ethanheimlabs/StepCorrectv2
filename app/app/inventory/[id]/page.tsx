@@ -13,6 +13,29 @@ import { getInventoryEntry, listInventoryActions } from "@/lib/repositories/inve
 
 export const dynamic = "force-dynamic";
 
+function renderLines(lines: string[]) {
+  return (
+    <div className="mt-2 space-y-2">
+      {lines.map((line) => (
+        <p key={line}>{line}</p>
+      ))}
+    </div>
+  );
+}
+
+function renderParagraphLines(value: string) {
+  const lines = value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length <= 1) {
+    return <p className="mt-2">{value}</p>;
+  }
+
+  return renderLines(lines);
+}
+
 export default async function InventoryDetailPage({
   params
 }: {
@@ -73,6 +96,22 @@ export default async function InventoryDetailPage({
               </p>
               <p className="mt-2">{entry.extractedResentment.what_happened_facts}</p>
             </div>
+            {entry.extractedResentment.affected_parts_detail.length ? (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  What part of me was affected
+                </p>
+                {renderLines(entry.extractedResentment.affected_parts_detail)}
+              </div>
+            ) : null}
+            {entry.extractedResentment.felt_reactions.length ? (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  What did it make me feel
+                </p>
+                {renderLines(entry.extractedResentment.felt_reactions)}
+              </div>
+            ) : null}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Affects my
@@ -92,11 +131,19 @@ export default async function InventoryDetailPage({
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 My part
               </p>
-              <p className="mt-2">{entry.extractedResentment.my_part_controlled}</p>
+              {renderParagraphLines(entry.extractedResentment.my_part_controlled)}
             </div>
+            {entry.extractedResentment.fear_inventory.length ? (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  What was I afraid of
+                </p>
+                {renderLines(entry.extractedResentment.fear_inventory)}
+              </div>
+            ) : null}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Patterns
+                What character defects showed up
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {entry.extractedResentment.defects_or_patterns.map((pattern) => (
@@ -109,9 +156,25 @@ export default async function InventoryDetailPage({
                 ))}
               </div>
             </div>
+            {entry.extractedResentment.acceptance_needed.length ? (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  What do I need to accept
+                </p>
+                {renderLines(entry.extractedResentment.acceptance_needed)}
+              </div>
+            ) : null}
+            {entry.extractedResentment.spiritual_truths.length ? (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  What is the spiritual truth
+                </p>
+                {renderLines(entry.extractedResentment.spiritual_truths)}
+              </div>
+            ) : null}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Next right actions
+                What is the corrective action
               </p>
               <div className="mt-2 space-y-2">
                 {actions.map((action) => (

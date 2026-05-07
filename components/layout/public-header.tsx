@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import Link from "next/link";
 
+import { BrandMark } from "@/components/layout/brand-mark";
 import { buttonVariants } from "@/components/ui/button";
 import { isPricingEnabled } from "@/lib/runtime-mode";
 import { cn } from "@/lib/utils";
@@ -20,9 +21,7 @@ export function PublicHeader() {
     <header className="sticky top-0 z-30 border-b border-border/70 bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link className="flex items-center gap-3" href="/">
-          <div className="rounded-full border border-border/70 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            StepCorrect
-          </div>
+          <BrandMark />
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">

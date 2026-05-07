@@ -1,6 +1,16 @@
 import { EMPTY_AFFECT_FLAGS } from "@/lib/constants";
 import type { DailyCheckIn, ResentmentExtraction } from "@/lib/types";
 
+function cleanStringList(values: unknown) {
+  if (!Array.isArray(values)) {
+    return [];
+  }
+
+  return values
+    .map((item) => (typeof item === "string" ? item.trim() : ""))
+    .filter(Boolean);
+}
+
 export function validateRawText(rawText: unknown) {
   if (typeof rawText !== "string" || rawText.trim().length < 5) {
     throw new Error("Give the resentment a little more truth before continuing.");
@@ -56,10 +66,15 @@ export function validateResentmentExtraction(payload: unknown): ResentmentExtrac
       ...EMPTY_AFFECT_FLAGS,
       ...(extraction.affects ?? {})
     },
+    affected_parts_detail: cleanStringList(extraction.affected_parts_detail),
+    felt_reactions: cleanStringList(extraction.felt_reactions),
     my_part_controlled: extraction.my_part_controlled.trim(),
+    fear_inventory: cleanStringList(extraction.fear_inventory),
     defects_or_patterns: Array.isArray(extraction.defects_or_patterns)
       ? extraction.defects_or_patterns.map((item) => item.trim()).filter(Boolean)
       : [],
+    acceptance_needed: cleanStringList(extraction.acceptance_needed),
+    spiritual_truths: cleanStringList(extraction.spiritual_truths),
     next_right_actions: nextRightActions.slice(0, 3),
     shareable_sponsor_summary: extraction.shareable_sponsor_summary?.trim() ?? ""
   };

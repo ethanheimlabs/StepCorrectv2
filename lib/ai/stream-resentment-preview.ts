@@ -43,7 +43,7 @@ export async function streamResentmentPreview(
       reasoning: {
         effort: "low"
       },
-      max_output_tokens: 220
+      max_output_tokens: 520
     })
     .on("response.output_text.delta", async (event) => {
       fullText += event.delta;

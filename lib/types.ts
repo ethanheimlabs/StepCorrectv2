@@ -32,8 +32,13 @@ export interface ResentmentExtraction {
   who_or_what: string;
   what_happened_facts: string;
   affects: AffectFlags;
+  affected_parts_detail: string[];
+  felt_reactions: string[];
   my_part_controlled: string;
+  fear_inventory: string[];
   defects_or_patterns: string[];
+  acceptance_needed: string[];
+  spiritual_truths: string[];
   next_right_actions: string[];
   shareable_sponsor_summary: string;
 }
