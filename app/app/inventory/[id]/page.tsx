@@ -36,6 +36,10 @@ function renderParagraphLines(value: string) {
   return renderLines(lines);
 }
 
+function buildPrayer(whoOrWhat: string) {
+  return `God, help me be free of anger toward ${whoOrWhat.toLowerCase()}. Show me where I need to be honest, willing, and at peace.`;
+}
+
 export default async function InventoryDetailPage({
   params
 }: {
@@ -53,6 +57,7 @@ export default async function InventoryDetailPage({
   const activeAffects = Object.entries(entry.extractedResentment.affects)
     .filter(([, enabled]) => enabled)
     .map(([key]) => AFFECT_LABELS[key as keyof typeof AFFECT_LABELS]);
+  const prayer = buildPrayer(entry.extractedResentment.who_or_what);
 
   return (
     <div className="space-y-6">
@@ -86,64 +91,61 @@ export default async function InventoryDetailPage({
             ) : null}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Who / What
+                1. Who am I resentful at?
               </p>
               <p className="mt-2">{entry.extractedResentment.who_or_what}</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                What happened
+                2. What happened?
               </p>
               <p className="mt-2">{entry.extractedResentment.what_happened_facts}</p>
             </div>
             {entry.extractedResentment.affected_parts_detail.length ? (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  What part of me was affected
+                  3. What part of me was affected?
                 </p>
                 {renderLines(entry.extractedResentment.affected_parts_detail)}
+                {activeAffects.length ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {activeAffects.map((affect) => (
+                      <div
+                        key={affect}
+                        className="rounded-full border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground"
+                      >
+                        {affect}
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             ) : null}
             {entry.extractedResentment.felt_reactions.length ? (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  What did it make me feel
+                  4. What did it make me feel?
                 </p>
                 {renderLines(entry.extractedResentment.felt_reactions)}
               </div>
             ) : null}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Affects my
-              </p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {activeAffects.map((affect) => (
-                  <div
-                    key={affect}
-                    className="rounded-full border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground"
-                  >
-                    {affect}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                My part
+                5. What was my part?
               </p>
               {renderParagraphLines(entry.extractedResentment.my_part_controlled)}
             </div>
             {entry.extractedResentment.fear_inventory.length ? (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  What was I afraid of
+                  6. What was I afraid of?
                 </p>
                 {renderLines(entry.extractedResentment.fear_inventory)}
               </div>
             ) : null}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                What character defects showed up
+                7. What character defects showed up?
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {entry.extractedResentment.defects_or_patterns.map((pattern) => (
@@ -159,7 +161,7 @@ export default async function InventoryDetailPage({
             {entry.extractedResentment.acceptance_needed.length ? (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  What do I need to accept
+                  8. What do I need to accept?
                 </p>
                 {renderLines(entry.extractedResentment.acceptance_needed)}
               </div>
@@ -167,14 +169,14 @@ export default async function InventoryDetailPage({
             {entry.extractedResentment.spiritual_truths.length ? (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  What is the spiritual truth
+                  9. What is the spiritual truth?
                 </p>
                 {renderLines(entry.extractedResentment.spiritual_truths)}
               </div>
             ) : null}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                What is the corrective action
+                10. What is the corrective action?
               </p>
               <div className="mt-2 space-y-2">
                 {actions.map((action) => (
@@ -186,6 +188,12 @@ export default async function InventoryDetailPage({
                   </div>
                 ))}
               </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Prayer:
+              </p>
+              <p className="mt-2">{prayer}</p>
             </div>
           </div>
         </SectionCard>

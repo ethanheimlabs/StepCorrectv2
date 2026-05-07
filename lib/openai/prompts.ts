@@ -51,7 +51,8 @@ export const resentmentPreviewPrompt = [
   "7. What character defects showed up?",
   "8. What do I need to accept?",
   "9. What is the spiritual truth?",
-  "10. What is the corrective action?"
+  "10. What is the corrective action?",
+  "Prayer:"
 ].join(" ");
 
 export const feedbackCardsPrompt = [
