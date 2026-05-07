@@ -42,6 +42,21 @@ export function ReviewForm({
 }) {
   const router = useRouter();
   const [review, setReview] = useState<ResentmentExtraction>(initialValue);
+  const [affectedPartsText, setAffectedPartsText] = useState(
+    listToTextarea(initialValue.affected_parts_detail)
+  );
+  const [feltReactionsText, setFeltReactionsText] = useState(
+    listToTextarea(initialValue.felt_reactions)
+  );
+  const [fearInventoryText, setFearInventoryText] = useState(
+    listToTextarea(initialValue.fear_inventory)
+  );
+  const [acceptanceText, setAcceptanceText] = useState(
+    listToTextarea(initialValue.acceptance_needed)
+  );
+  const [spiritualTruthsText, setSpiritualTruthsText] = useState(
+    listToTextarea(initialValue.spiritual_truths)
+  );
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const prayer = buildPrayer(review.who_or_what);
@@ -57,7 +72,14 @@ export function ReviewForm({
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(review)
+          body: JSON.stringify({
+            ...review,
+            affected_parts_detail: textareaToList(affectedPartsText),
+            felt_reactions: textareaToList(feltReactionsText),
+            fear_inventory: textareaToList(fearInventoryText),
+            acceptance_needed: textareaToList(acceptanceText),
+            spiritual_truths: textareaToList(spiritualTruthsText)
+          })
         });
         const data = (await response.json()) as {
           error?: string;
@@ -110,13 +132,8 @@ export function ReviewForm({
         <Textarea
           id="affected_parts_detail"
           className="min-h-[180px]"
-          value={listToTextarea(review.affected_parts_detail)}
-          onChange={(event) =>
-            setReview((current) => ({
-              ...current,
-              affected_parts_detail: textareaToList(event.target.value)
-            }))
-          }
+          value={affectedPartsText}
+          onChange={(event) => setAffectedPartsText(event.target.value)}
         />
         <p className="text-sm leading-6 text-muted-foreground">
           One short line per area that got hit.
@@ -132,13 +149,8 @@ export function ReviewForm({
         <Textarea
           id="felt_reactions"
           className="min-h-[180px]"
-          value={listToTextarea(review.felt_reactions)}
-          onChange={(event) =>
-            setReview((current) => ({
-              ...current,
-              felt_reactions: textareaToList(event.target.value)
-            }))
-          }
+          value={feltReactionsText}
+          onChange={(event) => setFeltReactionsText(event.target.value)}
         />
         <p className="text-sm leading-6 text-muted-foreground">
           Keep each line short and plain.
@@ -168,13 +180,8 @@ export function ReviewForm({
         <Textarea
           id="fear_inventory"
           className="min-h-[180px]"
-          value={listToTextarea(review.fear_inventory)}
-          onChange={(event) =>
-            setReview((current) => ({
-              ...current,
-              fear_inventory: textareaToList(event.target.value)
-            }))
-          }
+          value={fearInventoryText}
+          onChange={(event) => setFearInventoryText(event.target.value)}
         />
       </div>
 
@@ -193,13 +200,8 @@ export function ReviewForm({
         <Textarea
           id="acceptance_needed"
           className="min-h-[180px]"
-          value={listToTextarea(review.acceptance_needed)}
-          onChange={(event) =>
-            setReview((current) => ({
-              ...current,
-              acceptance_needed: textareaToList(event.target.value)
-            }))
-          }
+          value={acceptanceText}
+          onChange={(event) => setAcceptanceText(event.target.value)}
         />
       </div>
 
@@ -208,13 +210,8 @@ export function ReviewForm({
         <Textarea
           id="spiritual_truths"
           className="min-h-[160px]"
-          value={listToTextarea(review.spiritual_truths)}
-          onChange={(event) =>
-            setReview((current) => ({
-              ...current,
-              spiritual_truths: textareaToList(event.target.value)
-            }))
-          }
+          value={spiritualTruthsText}
+          onChange={(event) => setSpiritualTruthsText(event.target.value)}
         />
         <p className="text-sm leading-6 text-muted-foreground">
           Keep it grounded and practical, not preachy.
