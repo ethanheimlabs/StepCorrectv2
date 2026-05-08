@@ -79,6 +79,211 @@ function buildAffects(rawText: string, clarificationText: string) {
   };
 }
 
+function pushUnique(list: string[], value: string) {
+  const normalized = value.trim();
+
+  if (!normalized || list.includes(normalized)) {
+    return;
+  }
+
+  list.push(normalized);
+}
+
+function limitList(list: string[], minFallback: string[], max = 6) {
+  const trimmed = list.map((item) => item.trim()).filter(Boolean);
+  const deduped = trimmed.filter((item, index) => trimmed.indexOf(item) === index);
+  const limited = deduped.slice(0, max);
+
+  return limited.length ? limited : minFallback;
+}
+
+function buildContextualDraft(rawText: string, clarificationText: string) {
+  const source = normalizeInput(`${rawText} ${clarificationText}`);
+  const whoOrWhat = deriveWhoOrWhat(rawText);
+  const facts = clarificationText.trim() || rawText.trim();
+  const affects = buildAffects(rawText, clarificationText);
+
+  const isFamily = /\bsister|brother|mom|mother|dad|father|family|parent\b/.test(source);
+  const isPartner =
+    /\bpartner|wife|husband|girlfriend|boyfriend|dating|relationship|marriage\b/.test(source);
+  const isWork = /\bboss|manager|work|job|coworker|office|career\b/.test(source);
+  const isMoney = /\bmoney|rent|bill|debt|pay|paid|cost|expense\b/.test(source);
+  const isBoundary = /\bboundar|pushed|ignored my no|wouldn't stop|would not stop\b/.test(source);
+  const isCriticism =
+    /\bcritic|judg|dismiss|belittle|talked down|insult|embarrass|humiliat|not enough\b/.test(
+      source
+    );
+  const isRejection =
+    /\breject|ignored|didn't choose|did not choose|not chosen|left out|abandon|replace|ghost\b/.test(
+      source
+    );
+  const isTrustBreak =
+    /\blie|lied|betray|cheat|affair|talked about me|shared|gossip|trust\b/.test(source);
+  const isControl =
+    /\bcontrol|pressure|push|demand|force|should have|needed them to\b/.test(source);
+
+  const affectedParts: string[] = [];
+  const feltReactions: string[] = [];
+  const fears: string[] = [];
+  const myPart: string[] = [];
+  const patterns: string[] = [];
+  const acceptance: string[] = [];
+  const spiritualTruths: string[] = [];
+  const actions: string[] = [];
+
+  if (affects.self_esteem || isCriticism) {
+    pushUnique(affectedParts, "My self-esteem");
+    pushUnique(affectedParts, "My sense of being respected");
+    pushUnique(feltReactions, "Hurt");
+    pushUnique(feltReactions, "Embarrassed");
+    pushUnique(fears, "That I am not enough");
+    pushUnique(patterns, "resentment");
+    pushUnique(patterns, "fear");
+  }
+
+  if (affects.pride || isCriticism) {
+    pushUnique(affectedParts, "My pride");
+    pushUnique(feltReactions, "Defensive");
+    pushUnique(fears, "That I will look foolish");
+  }
+
+  if (affects.security || isBoundary || isTrustBreak) {
+    pushUnique(affectedParts, isPartner ? "My security in the relationship" : "My security");
+    pushUnique(feltReactions, "On edge");
+    pushUnique(feltReactions, "Guarded");
+    pushUnique(fears, "That I cannot trust this situation");
+    pushUnique(patterns, "control");
+  }
+
+  if (affects.personal_relations || isFamily || isPartner || isRejection) {
+    pushUnique(
+      affectedParts,
+      isPartner ? "My sense of being wanted and chosen" : isFamily ? "My place in the family" : "My relationships"
+    );
+    pushUnique(feltReactions, isPartner || isRejection ? "Rejected" : "Angry");
+    pushUnique(fears, isPartner || isRejection ? "That I will not be chosen" : "That I will be judged");
+  }
+
+  if (affects.ambitions || isWork) {
+    pushUnique(affectedParts, "My future at work");
+    pushUnique(affectedParts, "My confidence in how I am seen");
+    pushUnique(feltReactions, "Threatened");
+    pushUnique(feltReactions, "Anxious");
+    pushUnique(fears, "That this affects my future");
+    pushUnique(fears, "That I look unreliable");
+    pushUnique(patterns, "defensiveness");
+  }
+
+  if (affects.pocketbook || isMoney) {
+    pushUnique(affectedParts, "My money and stability");
+    pushUnique(feltReactions, "Pressured");
+    pushUnique(fears, "That I will not be financially secure");
+  }
+
+  if (isFamily) {
+    pushUnique(feltReactions, "Judged");
+    pushUnique(fears, "That my family will believe the worst about me");
+    pushUnique(myPart, "I may be looking for approval from family instead of staying grounded in my own side.");
+    pushUnique(myPart, "I may need a cleaner boundary around this conversation.");
+    pushUnique(patterns, "people_pleasing");
+    pushUnique(acceptance, "They may not see it the way I want them to.");
+    pushUnique(acceptance, "I cannot control how they talk or think about me.");
+    pushUnique(spiritualTruths, "Their opinion does not decide my worth.");
+    pushUnique(spiritualTruths, "I can stay honest and hold a boundary without a fight.");
+    pushUnique(actions, "Call or text sponsor before reacting");
+    pushUnique(actions, "Write the facts before talking to family again");
+  }
+
+  if (isPartner || isRejection) {
+    pushUnique(feltReactions, "Powerless");
+    pushUnique(fears, "That I will be abandoned");
+    pushUnique(fears, "That I gave too much power to their response");
+    pushUnique(myPart, "I may be tying my worth to their response.");
+    pushUnique(myPart, "I may be chasing clarity or reassurance instead of accepting what is in front of me.");
+    pushUnique(patterns, "approval_seeking");
+    pushUnique(patterns, "fantasy_thinking");
+    pushUnique(acceptance, "I cannot force clarity, affection, or reassurance from another person.");
+    pushUnique(acceptance, "Their behavior may show their capacity, but it does not define my value.");
+    pushUnique(spiritualTruths, "My value does not come from being chosen by this person.");
+    pushUnique(spiritualTruths, "Peace comes from self-respect and right action, not from getting the response I want.");
+    pushUnique(actions, "Pause before reaching out again");
+    pushUnique(actions, "Write the facts and the fear before sending any message");
+  }
+
+  if (isWork) {
+    pushUnique(myPart, "I may be reacting before I separate facts from fear.");
+    pushUnique(myPart, "I may be letting one comment turn into a whole story about my future.");
+    pushUnique(patterns, "control");
+    pushUnique(acceptance, "I cannot control another person's tone or interpretation.");
+    pushUnique(acceptance, "I can respond to facts instead of the whole story in my head.");
+    pushUnique(spiritualTruths, "My worth is bigger than one tense exchange.");
+    pushUnique(spiritualTruths, "Clarity comes faster when I slow down.");
+    pushUnique(actions, "Write the facts before replying");
+    pushUnique(actions, "Ask one calm follow-up instead of assuming");
+  }
+
+  if (isBoundary || isControl) {
+    pushUnique(myPart, "I may be staying mentally fused to this instead of stepping back.");
+    pushUnique(myPart, "I may need to say less and choose a clearer boundary.");
+    pushUnique(patterns, "resentment_loop");
+    pushUnique(acceptance, "I cannot force another person to respond the way I want.");
+    pushUnique(spiritualTruths, "I can protect my peace without controlling the other person.");
+    pushUnique(actions, "Pause before reacting");
+    pushUnique(actions, "Choose one clear boundary for today");
+  }
+
+  if (isTrustBreak) {
+    pushUnique(feltReactions, "Betrayed");
+    pushUnique(fears, "That I will get hurt again");
+    pushUnique(myPart, "I may be replaying the betrayal instead of focusing on my next clean move.");
+    pushUnique(patterns, "judgment");
+    pushUnique(acceptance, "I cannot undo what was already said or done.");
+    pushUnique(spiritualTruths, "I can tell the truth about the hurt without staying fused to it.");
+  }
+
+  pushUnique(feltReactions, "Angry");
+  pushUnique(myPart, "I may be replaying the situation and feeding the resentment.");
+  pushUnique(myPart, "I need to focus on my response instead of trying to control the outcome.");
+  pushUnique(patterns, "fear");
+  pushUnique(acceptance, "I can still choose a clean response today.");
+  pushUnique(spiritualTruths, "My peace does not have to depend on their behavior.");
+  pushUnique(spiritualTruths, "I can return to honesty, humility, and right action.");
+  pushUnique(actions, "Take one clean action today instead of replaying it");
+
+  return {
+    type: "resentment" as const,
+    who_or_what: whoOrWhat,
+    what_happened_facts: facts,
+    affects,
+    affected_parts_detail: limitList(affectedParts, [
+      "My self-esteem",
+      "My security",
+      "My need for respect"
+    ], 6),
+    felt_reactions: limitList(feltReactions, ["Angry", "Hurt", "Thrown off"], 6),
+    my_part_controlled: myPart.join("\n"),
+    fear_inventory: limitList(fears, [
+      "That this means something bad about me",
+      "That I am losing control of the situation",
+      "That I will not be okay if they do not change"
+    ], 5),
+    defects_or_patterns: limitList(patterns, ["fear", "control"], 5),
+    acceptance_needed: limitList(acceptance, [
+      "I cannot force a different version of what happened.",
+      "I can still choose a clean response today."
+    ], 4),
+    spiritual_truths: limitList(spiritualTruths, [
+      "My peace does not have to depend on their behavior.",
+      "I can return to honesty, humility, and right action."
+    ], 4),
+    next_right_actions: limitList(actions, [
+      "Reach out to sponsor before reacting",
+      "Write a short 10th Step on the facts",
+      "Pause and choose one clean response today"
+    ], 3)
+  };
+}
+
 function buildSummary(extraction: Omit<ResentmentExtraction, "shareable_sponsor_summary">) {
   const activeAffects = Object.entries(extraction.affects)
     .filter(([, enabled]) => enabled)
@@ -165,41 +370,7 @@ function extractResentmentFallback(
     };
   }
 
-  const base = {
-    type: "resentment" as const,
-    who_or_what: deriveWhoOrWhat(rawText),
-    what_happened_facts: clarificationText.trim() || rawText.trim(),
-    affects: buildAffects(rawText, clarificationText),
-    affected_parts_detail: ["My self-esteem", "My security", "My need for respect"],
-    felt_reactions: ["Angry", "Hurt", "Thrown off"],
-    my_part_controlled:
-      [
-        "I am replaying the situation and feeding the resentment.",
-        "I am wanting a different outcome from something I cannot control.",
-        "I need to focus on my response instead of their behavior."
-      ].join("\n"),
-    fear_inventory: [
-      "That this means something bad about me",
-      "That I am losing control of the situation",
-      "That I will not be okay if they do not change"
-    ],
-    defects_or_patterns: ["fear", "control"],
-    acceptance_needed: [
-      "I cannot force a different version of what happened.",
-      "I cannot make another person respond the way I want.",
-      "I can still choose a clean response today."
-    ],
-    spiritual_truths: [
-      "My peace does not have to depend on their behavior.",
-      "I can return to honesty, humility, and right action.",
-      "I do not need to stay fused to the resentment."
-    ],
-    next_right_actions: [
-      "Reach out to sponsor before reacting",
-      "Write a short 10th Step on the facts",
-      "Pause and choose one clean response today"
-    ]
-  };
+  const base = buildContextualDraft(rawText, clarificationText);
 
   return {
     ...base,
@@ -222,6 +393,7 @@ async function extractResentmentWithAI(
   rawText: string,
   clarificationText: string
 ): Promise<ResentmentExtraction | null> {
+  const contextualDraft = buildContextualDraft(rawText, clarificationText);
   const parsed = await parseStructuredResponse({
     schema: resentmentExtractionSchema,
     schemaName: "resentment_extraction",
@@ -257,43 +429,43 @@ async function extractResentmentWithAI(
 
   return {
     ...parsed,
-    who_or_what: parsed.who_or_what.trim(),
-    what_happened_facts: parsed.what_happened_facts.trim(),
+    who_or_what: parsed.who_or_what.trim() || contextualDraft.who_or_what,
+    what_happened_facts: parsed.what_happened_facts.trim() || contextualDraft.what_happened_facts,
     affects: {
       ...EMPTY_AFFECT_FLAGS,
       ...parsed.affects
     },
-    affected_parts_detail: sanitizeArray(parsed.affected_parts_detail, [
-      "My self-esteem",
-      "My security",
-      "My need for respect"
-    ]),
-    felt_reactions: sanitizeArray(parsed.felt_reactions, ["Angry", "Hurt", "Thrown off"]),
-    my_part_controlled: parsed.my_part_controlled.trim(),
-    fear_inventory: sanitizeArray(parsed.fear_inventory, [
-      "That this means something bad about me",
-      "That I am losing control of the situation",
-      "That I will not be okay if they do not change"
-    ]),
-    defects_or_patterns: sanitizeArray(parsed.defects_or_patterns, ["fear", "control"]),
-    acceptance_needed: sanitizeArray(parsed.acceptance_needed, [
-      "I cannot force a different version of what happened.",
-      "I cannot make another person respond the way I want."
-    ]),
-    spiritual_truths: sanitizeArray(parsed.spiritual_truths, [
-      "My peace does not have to depend on their behavior.",
-      "I can return to honesty, humility, and right action."
-    ]),
+    affected_parts_detail: sanitizeArray(
+      parsed.affected_parts_detail,
+      contextualDraft.affected_parts_detail
+    ),
+    felt_reactions: sanitizeArray(parsed.felt_reactions, contextualDraft.felt_reactions),
+    my_part_controlled: parsed.my_part_controlled.trim() || contextualDraft.my_part_controlled,
+    fear_inventory: sanitizeArray(parsed.fear_inventory, contextualDraft.fear_inventory),
+    defects_or_patterns: sanitizeArray(
+      parsed.defects_or_patterns,
+      contextualDraft.defects_or_patterns
+    ),
+    acceptance_needed: sanitizeArray(
+      parsed.acceptance_needed,
+      contextualDraft.acceptance_needed
+    ),
+    spiritual_truths: sanitizeArray(
+      parsed.spiritual_truths,
+      contextualDraft.spiritual_truths
+    ),
     next_right_actions: sanitizeArray(
       parsed.next_right_actions,
-      [
-        "Reach out to sponsor before reacting",
-        "Write a short 10th Step on the facts",
-        "Pause and choose one clean response today"
-      ],
+      contextualDraft.next_right_actions,
       3
     ),
-    shareable_sponsor_summary: parsed.shareable_sponsor_summary.trim()
+    shareable_sponsor_summary:
+      parsed.shareable_sponsor_summary.trim() ||
+      buildSummary({
+        ...contextualDraft,
+        who_or_what: parsed.who_or_what.trim() || contextualDraft.who_or_what,
+        what_happened_facts: parsed.what_happened_facts.trim() || contextualDraft.what_happened_facts
+      })
   };
 }
 

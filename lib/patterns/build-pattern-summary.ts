@@ -36,6 +36,33 @@ function normalizeLabel(value: string) {
   return value.trim().replace(/\s+/g, " ");
 }
 
+function fearBucketsForEntry(entry: InventoryEntry) {
+  const source = (entry.extractedResentment?.fear_inventory ?? []).join(" ").toLowerCase();
+  const buckets = new Set<string>();
+
+  if (/\breject|chosen|wanted|replaced\b/.test(source)) {
+    buckets.add("fear of rejection");
+  }
+
+  if (/\babandon|left\b/.test(source)) {
+    buckets.add("fear of abandonment");
+  }
+
+  if (/\bcontrol|okay if they do not change|not be okay\b/.test(source)) {
+    buckets.add("fear of losing control");
+  }
+
+  if (/\bjudge|foolish|respect|believe the worst\b/.test(source)) {
+    buckets.add("fear of judgment");
+  }
+
+  if (/\bfuture|unreliable|job|financial|secure\b/.test(source)) {
+    buckets.add("fear around security");
+  }
+
+  return Array.from(buckets);
+}
+
 function subjectBucketsForEntry(entry: InventoryEntry) {
   const source = `${entry.rawText} ${entry.clarificationText ?? ""} ${
     entry.extractedResentment?.who_or_what ?? ""
@@ -340,6 +367,7 @@ export function buildPatternSummary({
   const personCounts = new Map<string, number>();
   const affectCounts = new Map<string, number>();
   const patternCounts = new Map<string, number>();
+  const fearCounts = new Map<string, number>();
 
   for (const entry of resentmentEntries) {
     const whoOrWhat = normalizeLabel(entry.extractedResentment?.who_or_what ?? "");
@@ -354,14 +382,26 @@ export function buildPatternSummary({
       incrementCount(subjectCounts, bucket);
     }
 
-    for (const [key, enabled] of Object.entries(entry.extractedResentment?.affects ?? {})) {
-      if (enabled) {
-        incrementCount(affectCounts, key.replace(/_/g, " "));
+    const affectedDetails = entry.extractedResentment?.affected_parts_detail ?? [];
+
+    if (affectedDetails.length) {
+      for (const detail of affectedDetails) {
+        incrementCount(affectCounts, normalizeLabel(detail));
+      }
+    } else {
+      for (const [key, enabled] of Object.entries(entry.extractedResentment?.affects ?? {})) {
+        if (enabled) {
+          incrementCount(affectCounts, key.replace(/_/g, " "));
+        }
       }
     }
 
     for (const pattern of entry.extractedResentment?.defects_or_patterns ?? []) {
       incrementCount(patternCounts, pattern.replace(/_/g, " "));
+    }
+
+    for (const fearBucket of fearBucketsForEntry(entry)) {
+      incrementCount(fearCounts, fearBucket);
     }
   }
 
@@ -375,6 +415,11 @@ export function buildPatternSummary({
     resentmentEntries,
     checkIns
   );
+  const topFearTheme = topItems(fearCounts, 1)[0];
+  const fearThemeNote =
+    topFearTheme && (fearCounts.get(topFearTheme) ?? 0) >= 2
+      ? `${topFearTheme.charAt(0).toUpperCase() + topFearTheme.slice(1)} keeps showing up under the resentment.`
+      : null;
 
   return {
     total_entries: resentmentEntries.length,
@@ -385,6 +430,7 @@ export function buildPatternSummary({
     actions_that_help: actionOutcomeSummary.actionsThatHelp,
     trend_notes: [
       ...actionOutcomeSummary.trendNotes,
+      ...(fearThemeNote ? [fearThemeNote] : []),
       ...(inventoryFollowThroughNote ? [inventoryFollowThroughNote] : []),
       ...recurrence.notes
     ].slice(0, 4),

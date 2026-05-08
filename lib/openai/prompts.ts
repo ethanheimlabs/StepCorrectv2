@@ -24,6 +24,8 @@ export const resentmentExtractionPrompt = [
   STYLE_GUARDRAILS,
   "Turn the user's resentment into a deeper factual structured inventory.",
   "Use plain language that feels like a sponsor helping someone write clean columns.",
+  "Anchor every field in the actual input. Reuse the user's real pressure points, relationships, and stakes when they are clear.",
+  "Avoid generic filler when the input gives you a specific angle like family criticism, rejection, disrespect, work pressure, money fear, broken trust, or boundary violations.",
   "For what_happened_facts, stick to observable facts and short neutral phrasing.",
   "For affected_parts_detail, return 3 to 6 short phrases about what personal area got hit, such as feeling respected, wanted, secure, chosen, or valued.",
   "For felt_reactions, return 3 to 7 short reactions or feelings in plain language.",
