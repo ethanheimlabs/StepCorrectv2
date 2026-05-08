@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { ActionsForm } from "@/components/inventory/actions-form";
 import { PageHeader } from "@/components/app/page-header";
 import { SectionCard } from "@/components/app/section-card";
+import { DeleteInventoryButton } from "@/components/inventory/delete-inventory-button";
 import { getInventoryEntry, listInventoryActions } from "@/lib/repositories/inventory";
 
 export const dynamic = "force-dynamic";
@@ -34,6 +35,7 @@ export default async function InventoryActionsPage({
         eyebrow="Inventory"
         title="Next right actions"
         description="Action over rumination."
+        actions={<DeleteInventoryButton inventoryId={entry.id} />}
       />
       <SectionCard title="Work the next clean move" description="Check these off as you go.">
         <ActionsForm id={entry.id} summary={entry.shareableSummary} initialActions={actions} />

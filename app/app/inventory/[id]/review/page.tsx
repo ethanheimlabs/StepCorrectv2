@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { PageHeader } from "@/components/app/page-header";
 import { SectionCard } from "@/components/app/section-card";
+import { DeleteInventoryButton } from "@/components/inventory/delete-inventory-button";
 import { ReviewForm } from "@/components/inventory/review-form";
 import { getClassificationForEntry } from "@/lib/inventory/workflow";
 import { getInventoryEntry } from "@/lib/repositories/inventory";
@@ -39,6 +40,7 @@ export default async function ReviewInventoryPage({
         eyebrow="Inventory"
         title="Review your columns"
         description="Keep the facts clean and own only your side."
+        actions={<DeleteInventoryButton inventoryId={entry.id} />}
       />
       <SectionCard title="Structured resentment review" description="Short, direct, and editable.">
         <ReviewForm

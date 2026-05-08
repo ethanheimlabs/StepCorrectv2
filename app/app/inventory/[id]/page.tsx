@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/app/page-header";
 import { SectionCard } from "@/components/app/section-card";
 import { PatternInsightSection } from "@/components/feedback/PatternInsightSection";
+import { DeleteInventoryButton } from "@/components/inventory/delete-inventory-button";
 import { SponsorSummaryCard } from "@/components/inventory/sponsor-summary-card";
 import { buttonVariants } from "@/components/ui/button";
 import { AFFECT_LABELS } from "@/lib/constants";
@@ -66,9 +67,12 @@ export default async function InventoryDetailPage({
         title="Saved"
         description="Keep the lesson. Drop the replay."
         actions={
-          <Link className={buttonVariants()} href="/app/inventory/new">
-            Start another inventory
-          </Link>
+          <>
+            <Link className={buttonVariants()} href="/app/inventory/new">
+              Start another inventory
+            </Link>
+            <DeleteInventoryButton inventoryId={entry.id} />
+          </>
         }
       />
 

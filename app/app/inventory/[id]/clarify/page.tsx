@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { PageHeader } from "@/components/app/page-header";
 import { SectionCard } from "@/components/app/section-card";
 import { ClarifyForm } from "@/components/inventory/clarify-form";
+import { DeleteInventoryButton } from "@/components/inventory/delete-inventory-button";
 import { getClassificationForEntry } from "@/lib/inventory/workflow";
 import { getInventoryEntry } from "@/lib/repositories/inventory";
 
@@ -35,6 +36,7 @@ export default async function ClarifyInventoryPage({
         eyebrow="Inventory"
         title="Quick question"
         description="Get specific enough to work with."
+        actions={<DeleteInventoryButton inventoryId={entry.id} />}
       />
       <SectionCard title="Clarify the actual hit" description="Short and factual is enough.">
         <ClarifyForm

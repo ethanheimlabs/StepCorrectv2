@@ -1,4 +1,5 @@
 import { readStore, updateStore } from "@/lib/data/store";
+import { deleteInventoryEntryEmbedding } from "@/lib/repositories/patterns";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { InventoryAction, InventoryEntry, ResentmentExtraction } from "@/lib/types";
 
@@ -347,4 +348,69 @@ export async function toggleInventoryAction(actionId: string, completed: boolean
   }));
 
   return nextAction;
+}
+
+export async function deleteInventoryEntry(id: string, userId: string) {
+  const current = await getInventoryEntry(id);
+
+  if (!current || current.userId !== userId || current.deletedAt) {
+    return null;
+  }
+
+  const deletedAt = new Date().toISOString();
+  const supabase = createSupabaseServerClient();
+
+  if (supabase) {
+    const deleteActionsResponse = await supabase
+      .from("inventory_actions")
+      .delete()
+      .eq("entry_id", id)
+      .eq("user_id", userId);
+
+    if (deleteActionsResponse.error) {
+      throw deleteActionsResponse.error;
+    }
+
+    await deleteInventoryEntryEmbedding(id);
+
+    const response = await supabase
+      .from("inventory_entries")
+      .update({ deleted_at: deletedAt })
+      .eq("id", id)
+      .eq("user_id", userId)
+      .is("deleted_at", null)
+      .select("*")
+      .single();
+
+    if (response.error) {
+      if (response.error.code === "PGRST116") {
+        return null;
+      }
+
+      throw response.error;
+    }
+
+    return response.data ? fromEntryRow(response.data as InventoryEntryRow) : null;
+  }
+
+  await updateStore((store) => ({
+    ...store,
+    inventoryEntries: {
+      ...store.inventoryEntries,
+      [id]: {
+        ...current,
+        deletedAt
+      }
+    },
+    inventoryActions: Object.fromEntries(
+      Object.entries(store.inventoryActions).filter(([, action]) => action.entryId !== id)
+    )
+  }));
+
+  await deleteInventoryEntryEmbedding(id);
+
+  return {
+    ...current,
+    deletedAt
+  };
 }

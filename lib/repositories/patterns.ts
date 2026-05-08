@@ -171,6 +171,32 @@ export async function saveInventoryEntryEmbedding(
   return nextEmbedding;
 }
 
+export async function deleteInventoryEntryEmbedding(entryId: string) {
+  const supabase = createSupabaseServerClient();
+
+  if (supabase) {
+    const response = await supabase
+      .from("inventory_entry_embeddings")
+      .delete()
+      .eq("entry_id", entryId);
+
+    if (response.error) {
+      throw response.error;
+    }
+
+    return;
+  }
+
+  await updateStore((store) => ({
+    ...store,
+    inventoryEntryEmbeddings: Object.fromEntries(
+      Object.entries(store.inventoryEntryEmbeddings).filter(
+        ([, embedding]) => embedding.entryId !== entryId
+      )
+    )
+  }));
+}
+
 export async function getPatternFeedbackRecord(userId: string, timeframe: string) {
   const supabase = createSupabaseServerClient();
 
