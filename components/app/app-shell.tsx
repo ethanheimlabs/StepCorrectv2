@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -12,12 +13,17 @@ import { cn } from "@/lib/utils";
 
 export function AppShell({
   children,
-  fullName
+  fullName,
+  isAdmin = false
 }: {
   children: ReactNode;
   fullName: string;
+  isAdmin?: boolean;
 }) {
   const pathname = usePathname();
+  const navItems = isAdmin
+    ? [...APP_NAV_ITEMS, { href: "/app/admin" as Route, label: "Admin" }]
+    : APP_NAV_ITEMS;
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,rgba(251,251,249,0.92),rgba(240,243,247,0.96))]">
@@ -33,7 +39,7 @@ export function AppShell({
             </div>
 
             <nav className="mt-6 grid gap-2">
-              {APP_NAV_ITEMS.map((item) => {
+              {navItems.map((item) => {
                 const isActive =
                   pathname === item.href || pathname.startsWith(`${item.href}/`);
 
@@ -46,7 +52,7 @@ export function AppShell({
                         ? "bg-primary text-primary-foreground"
                         : "bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
-                    href={item.href}
+                    href={item.href as Route}
                   >
                     {item.label}
                   </Link>

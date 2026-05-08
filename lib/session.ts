@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { isAdminEmail } from "@/lib/admin";
 import { DEFAULT_TONE_MODE, DEMO_USER_ID, DEMO_USER_NAME } from "@/lib/constants";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { hasSupabaseAuthEnv } from "@/lib/supabase/env";
@@ -56,6 +57,16 @@ export async function requireCurrentUser() {
 
   if (!user) {
     redirect("/login");
+  }
+
+  return user;
+}
+
+export async function requireAdminUser() {
+  const user = await requireCurrentUser();
+
+  if (!isAdminEmail(user.email)) {
+    redirect("/app");
   }
 
   return user;
