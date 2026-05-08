@@ -19,6 +19,36 @@ function formatList(values: string[]) {
   return values.length ? values.join(", ") : "none noted yet";
 }
 
+function humanize(value: string) {
+  return value.replace(/_/g, " ").trim();
+}
+
+function capitalize(value: string) {
+  if (!value) {
+    return value;
+  }
+
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function joinTop(values: string[], limit = 2) {
+  const items = values.map(humanize).filter(Boolean).slice(0, limit);
+
+  if (!items.length) {
+    return "";
+  }
+
+  if (items.length === 1) {
+    return items[0];
+  }
+
+  return `${items[0]} and ${items[1]}`;
+}
+
+function firstMeaningful(values: string[]) {
+  return values.map(humanize).find(Boolean) ?? null;
+}
+
 function buildSummaryFacts(summary: PatternSummary) {
   return [
     `Total entries: ${summary.total_entries}`,
@@ -39,6 +69,126 @@ function buildSummaryFacts(summary: PatternSummary) {
   ].join("\n");
 }
 
+function buildPatternCard(summary: PatternSummary) {
+  const repeatedPerson = firstMeaningful(summary.stats.top_repeated_people);
+  const repeatedTopic = firstMeaningful(summary.recurring_people_or_topics);
+  const triggerSubject = firstMeaningful(summary.stats.top_trigger_subjects);
+  const anchor = repeatedPerson ?? repeatedTopic ?? triggerSubject ?? "This pattern";
+
+  if (summary.similar_entry_count >= 2) {
+    return `${capitalize(anchor)} keeps coming back. You've been in this lane before.`;
+  }
+
+  if (summary.total_entries >= 2) {
+    return `${capitalize(anchor)} is becoming a repeat theme.`;
+  }
+
+  return `${capitalize(anchor)} is the clearest thread in this entry so far.`;
+}
+
+function buildImpactCard(summary: PatternSummary) {
+  const impacts = joinTop(summary.top_affected_areas, 2);
+
+  if (impacts) {
+    return `${capitalize(impacts)} tend to get hit first when this comes up.`;
+  }
+
+  const triggerSubject = firstMeaningful(summary.stats.top_trigger_subjects);
+
+  if (triggerSubject) {
+    return `${capitalize(triggerSubject)} seems to land fast when the pressure comes on.`;
+  }
+
+  return "This tends to land hard once the resentment gets moving.";
+}
+
+function buildBehaviorCard(summary: PatternSummary) {
+  const topPatterns = joinTop(summary.top_patterns, 2);
+  const helpfulSignal = firstMeaningful(summary.stats.helpful_action_signals);
+  const incompleteLoop = firstMeaningful(summary.stats.incomplete_action_loops);
+  const fearTrend = summary.trend_notes.find((note) => /fear of /i.test(note));
+
+  if (topPatterns && helpfulSignal) {
+    return `${capitalize(topPatterns)} tend to show up here. ${capitalize(helpfulSignal)} seems to help when you actually do it.`;
+  }
+
+  if (fearTrend) {
+    return fearTrend;
+  }
+
+  if (topPatterns && incompleteLoop) {
+    return `${capitalize(topPatterns)} keep showing up, and ${incompleteLoop} often gets left undone.`;
+  }
+
+  if (summary.trend_notes[0]) {
+    return summary.trend_notes[0];
+  }
+
+  if (topPatterns) {
+    return `${capitalize(topPatterns)} keep showing up in the middle of it.`;
+  }
+
+  return "Your repeat move is getting clearer as you keep writing it down.";
+}
+
+function buildNextActionCard(summary: PatternSummary) {
+  const helpfulAction = firstMeaningful(summary.actions_that_help);
+  const helpfulSignal = firstMeaningful(summary.stats.helpful_action_signals);
+  const incompleteLoop = firstMeaningful(summary.stats.incomplete_action_loops);
+
+  if (helpfulAction) {
+    return `Today's move: ${helpfulAction.replace(/\.$/, "")}.`;
+  }
+
+  if (helpfulSignal) {
+    return `Today's move: ${helpfulSignal.replace(/\.$/, "")}.`;
+  }
+
+  if (incompleteLoop) {
+    return `Today's move: follow through on ${incompleteLoop.replace(/\.$/, "")} before the loop builds momentum.`;
+  }
+
+  return "Today's move: write the facts, don't react, and take one clean action.";
+}
+
+function normalizeGeneratedCard(summary: PatternSummary, value: string, fallback: string) {
+  const text = value.trim();
+
+  if (!text) {
+    return fallback;
+  }
+
+  const lower = text.toLowerCase();
+
+  if (
+    /\bthis situation\b/.test(lower) ||
+    /\byour peace\b/.test(lower) ||
+    /\bstill learning\b/.test(lower) ||
+    /\bstarting to stand out\b/.test(lower)
+  ) {
+    return fallback;
+  }
+
+  const anchors = [
+    ...summary.recurring_people_or_topics,
+    ...summary.top_affected_areas,
+    ...summary.top_patterns,
+    ...summary.actions_that_help,
+    ...summary.stats.top_trigger_subjects,
+    ...summary.stats.top_repeated_people
+  ]
+    .map((item) => item.toLowerCase())
+    .filter(Boolean);
+
+  const mentionsKnownFact = anchors.some((item) => lower.includes(item));
+
+  if (!mentionsKnownFact && summary.total_entries > 1) {
+    return fallback;
+  }
+
+  return text;
+}
+
 function generateFeedbackCardsFallback(summary: PatternSummary): FeedbackCardSet {
   if (!summary.total_entries) {
     return {
@@ -49,22 +199,11 @@ function generateFeedbackCardsFallback(summary: PatternSummary): FeedbackCardSet
     };
   }
 
-  const topTopic = summary.recurring_people_or_topics[0] ?? "This situation";
-  const topImpact = summary.top_affected_areas[0] ?? "your peace";
-  const topPattern = summary.top_patterns[0] ?? "pressure and reaction";
-  const nextAction =
-    summary.actions_that_help[0] ?? "write the facts, don't react, and reach out today";
-
   return {
-    pattern_card:
-      summary.similar_entry_count > 0
-        ? `${topTopic} keeps showing up. You've seen this kind of hit before.`
-        : `${topTopic} is starting to stand out.`,
-    impact_card: `${topImpact} seems to get hit first when this comes up.`,
-    behavior_card:
-      summary.trend_notes[0] ??
-      `${topPattern.replace(/_/g, " ")} keeps showing up in the middle of it.`,
-    next_right_action_card: `Today's move: ${nextAction.replace(/\.$/, "")}.`
+    pattern_card: buildPatternCard(summary),
+    impact_card: buildImpactCard(summary),
+    behavior_card: buildBehaviorCard(summary),
+    next_right_action_card: buildNextActionCard(summary)
   };
 }
 
@@ -82,6 +221,8 @@ function generateWeeklyReflectionFallback(summary: PatternSummary) {
 }
 
 export async function generateFeedbackCards(summary: PatternSummary): Promise<FeedbackCardSet> {
+  const fallback = generateFeedbackCardsFallback(summary);
+
   try {
     const parsed = await parseStructuredResponse({
       schema: feedbackCardSchema,
@@ -110,10 +251,23 @@ export async function generateFeedbackCards(summary: PatternSummary): Promise<Fe
       maxOutputTokens: 260
     });
 
-    return parsed ?? generateFeedbackCardsFallback(summary);
+    if (!parsed) {
+      return fallback;
+    }
+
+    return {
+      pattern_card: normalizeGeneratedCard(summary, parsed.pattern_card, fallback.pattern_card),
+      impact_card: normalizeGeneratedCard(summary, parsed.impact_card, fallback.impact_card),
+      behavior_card: normalizeGeneratedCard(summary, parsed.behavior_card, fallback.behavior_card),
+      next_right_action_card: normalizeGeneratedCard(
+        summary,
+        parsed.next_right_action_card,
+        fallback.next_right_action_card
+      )
+    };
   } catch (error) {
     console.error("OpenAI feedback card generation failed. Falling back to local copy.", error);
-    return generateFeedbackCardsFallback(summary);
+    return fallback;
   }
 }
 

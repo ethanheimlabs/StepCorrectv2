@@ -62,6 +62,8 @@ export const feedbackCardsPrompt = [
   STYLE_GUARDRAILS,
   "Write four short sponsor-style cards based only on the structured summary facts provided.",
   "Be observational, practical, and modest about certainty.",
+  "Name the actual recurring person, topic, affected area, or action when the summary clearly gives one.",
+  "Avoid vague phrases like 'this situation' or 'your peace' when a more specific fact is available.",
   "Do not add any statistics or claims not already present in the summary.",
   "Keep each card to one or two short sentences."
 ].join(" ");
