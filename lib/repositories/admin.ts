@@ -1,4 +1,4 @@
-import { readStore } from "@/lib/data/store";
+import { readStore, updateStore } from "@/lib/data/store";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 export type AdminUserSummary = {
@@ -154,4 +154,101 @@ export async function getAdminMetrics(): Promise<AdminMetrics> {
     note:
       "This is local fallback data. For real auth user counts, keep Supabase service-role access configured."
   };
+}
+
+export async function deleteUserAccount(userId: string) {
+  const supabase = getSupabaseAdmin();
+
+  if (supabase) {
+    const deleteInventoryEntries = await supabase
+      .from("inventory_entries")
+      .delete()
+      .eq("user_id", userId);
+
+    if (deleteInventoryEntries.error) {
+      throw deleteInventoryEntries.error;
+    }
+
+    const deletions = await Promise.all([
+      supabase.from("inventory_actions").delete().eq("user_id", userId),
+      supabase.from("inventory_entry_embeddings").delete().eq("user_id", userId),
+      supabase.from("pattern_feedback").delete().eq("user_id", userId),
+      supabase.from("daily_checkins").delete().eq("user_id", userId),
+      supabase.from("step_progress").delete().eq("user_id", userId),
+      supabase.from("profiles").delete().eq("id", userId)
+    ]);
+
+    for (const result of deletions) {
+      if (result.error) {
+        throw result.error;
+      }
+    }
+
+    const deleteAuthUser = await supabase.auth.admin.deleteUser(userId);
+
+    if (deleteAuthUser.error) {
+      throw deleteAuthUser.error;
+    }
+
+    return;
+  }
+
+  await updateStore((store) => {
+    const profiles = { ...store.profiles };
+    const inventoryEntries = { ...store.inventoryEntries };
+    const inventoryActions = { ...store.inventoryActions };
+    const inventoryEntryEmbeddings = { ...store.inventoryEntryEmbeddings };
+    const patternFeedback = { ...store.patternFeedback };
+    const dailyCheckins = { ...store.dailyCheckins };
+    const stepProgress = { ...store.stepProgress };
+
+    delete profiles[userId];
+
+    for (const [entryId, entry] of Object.entries(inventoryEntries)) {
+      if (entry.userId === userId) {
+        delete inventoryEntries[entryId];
+      }
+    }
+
+    for (const [actionId, action] of Object.entries(inventoryActions)) {
+      if (action.userId === userId || !inventoryEntries[action.entryId]) {
+        delete inventoryActions[actionId];
+      }
+    }
+
+    for (const [embeddingId, embedding] of Object.entries(inventoryEntryEmbeddings)) {
+      if (embedding.userId === userId || !inventoryEntries[embedding.entryId]) {
+        delete inventoryEntryEmbeddings[embeddingId];
+      }
+    }
+
+    for (const [feedbackId, feedback] of Object.entries(patternFeedback)) {
+      if (feedback.userId === userId) {
+        delete patternFeedback[feedbackId];
+      }
+    }
+
+    for (const [checkInId, checkIn] of Object.entries(dailyCheckins)) {
+      if (checkIn.userId === userId) {
+        delete dailyCheckins[checkInId];
+      }
+    }
+
+    for (const [stepId, step] of Object.entries(stepProgress)) {
+      if (step.userId === userId) {
+        delete stepProgress[stepId];
+      }
+    }
+
+    return {
+      ...store,
+      profiles,
+      inventoryEntries,
+      inventoryActions,
+      inventoryEntryEmbeddings,
+      patternFeedback,
+      dailyCheckins,
+      stepProgress
+    };
+  });
 }

@@ -1,3 +1,4 @@
+import { DeleteUserButton } from "@/components/admin/delete-user-button";
 import { PageHeader } from "@/components/app/page-header";
 import { SectionCard } from "@/components/app/section-card";
 import { hasAdminEmailsConfigured } from "@/lib/admin";
@@ -8,7 +9,7 @@ import { formatLongDate, formatStepDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  await requireAdminUser();
+  const adminUser = await requireAdminUser();
   const metrics = await getAdminMetrics();
 
   return (
@@ -92,9 +93,16 @@ export default async function AdminPage() {
                     <p className="text-sm font-semibold text-foreground">{user.fullName}</p>
                     <p className="text-sm text-muted-foreground">{user.email}</p>
                   </div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                    Joined {formatLongDate(user.createdAt)}
-                  </p>
+                  <div className="flex flex-col items-start gap-3 sm:items-end">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                      Joined {formatLongDate(user.createdAt)}
+                    </p>
+                    <DeleteUserButton
+                      disabled={user.id === adminUser.id}
+                      fullName={user.fullName}
+                      userId={user.id}
+                    />
+                  </div>
                 </div>
 
                 <div className="mt-3 grid gap-3 text-sm leading-6 text-muted-foreground md:grid-cols-3">
