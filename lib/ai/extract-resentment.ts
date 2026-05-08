@@ -79,6 +79,46 @@ function buildAffects(rawText: string, clarificationText: string) {
   };
 }
 
+function deriveFamilyReference(source: string) {
+  if (/\bher family\b/.test(source)) {
+    return "her family";
+  }
+
+  if (/\bhis family\b/.test(source)) {
+    return "his family";
+  }
+
+  if (/\btheir family\b/.test(source)) {
+    return "their family";
+  }
+
+  if (/\bour family\b/.test(source)) {
+    return "our family";
+  }
+
+  if (/\bmy family\b/.test(source)) {
+    return "my family";
+  }
+
+  return "family";
+}
+
+function deriveFamilyContext(source: string) {
+  const familyReference = deriveFamilyReference(source);
+  const mentionsOtherFamilyAudience =
+    /\bher family\b/.test(source) || /\bhis family\b/.test(source) || /\btheir family\b/.test(source);
+  const mentionsOwnFamilyAudience = /\bmy family\b/.test(source) || /\bour family\b/.test(source);
+  const targetIsFamilyMember =
+    /\bsister|brother|mom|mother|dad|father|parent\b/.test(source);
+
+  return {
+    familyReference,
+    mentionsOtherFamilyAudience,
+    mentionsOwnFamilyAudience,
+    targetIsFamilyMember
+  };
+}
+
 function pushUnique(list: string[], value: string) {
   const normalized = value.trim();
 
@@ -119,8 +159,13 @@ function buildContextualDraft(rawText: string, clarificationText: string) {
     );
   const isTrustBreak =
     /\blie|lied|betray|cheat|affair|talked about me|shared|gossip|trust\b/.test(source);
+  const isGossip =
+    /\btalked shit|talking shit|talked about me|gossip|shared|ran her mouth|ran his mouth|trash talked|bad mouthed\b/.test(
+      source
+    );
   const isControl =
     /\bcontrol|pressure|push|demand|force|should have|needed them to\b/.test(source);
+  const familyContext = deriveFamilyContext(source);
 
   const affectedParts: string[] = [];
   const feltReactions: string[] = [];
@@ -158,10 +203,33 @@ function buildContextualDraft(rawText: string, clarificationText: string) {
   if (affects.personal_relations || isFamily || isPartner || isRejection) {
     pushUnique(
       affectedParts,
-      isPartner ? "My sense of being wanted and chosen" : isFamily ? "My place in the family" : "My relationships"
+      isPartner
+        ? "My sense of being wanted and chosen"
+        : familyContext.mentionsOtherFamilyAudience
+          ? "My reputation"
+          : familyContext.targetIsFamilyMember || familyContext.mentionsOwnFamilyAudience
+            ? "My place in the family"
+            : "My relationships"
     );
     pushUnique(feltReactions, isPartner || isRejection ? "Rejected" : "Angry");
     pushUnique(fears, isPartner || isRejection ? "That I will not be chosen" : "That I will be judged");
+  }
+
+  if (isGossip) {
+    pushUnique(affectedParts, "How I am seen by other people");
+    pushUnique(affectedParts, "My reputation");
+    pushUnique(feltReactions, "Exposed");
+    pushUnique(feltReactions, "Disrespected");
+    pushUnique(fears, "That other people will believe the worst about me");
+    pushUnique(myPart, "I may be trying to control the story in other people's heads instead of staying grounded in the facts.");
+    pushUnique(patterns, "control");
+    pushUnique(patterns, "people_pleasing");
+    pushUnique(acceptance, "I cannot fully control what story another person tells about me.");
+    pushUnique(acceptance, "I do not need to chase every impression to be okay.");
+    pushUnique(spiritualTruths, "Other people's opinions are not final authority over my worth.");
+    pushUnique(spiritualTruths, "I can protect my side without chasing every rumor.");
+    pushUnique(actions, "Do not chase the story through other people today");
+    pushUnique(actions, "Write the facts before responding to what was said");
   }
 
   if (affects.ambitions || isWork) {
@@ -180,10 +248,34 @@ function buildContextualDraft(rawText: string, clarificationText: string) {
     pushUnique(fears, "That I will not be financially secure");
   }
 
-  if (isFamily) {
+  if (familyContext.mentionsOtherFamilyAudience) {
     pushUnique(feltReactions, "Judged");
-    pushUnique(fears, "That my family will believe the worst about me");
-    pushUnique(myPart, "I may be looking for approval from family instead of staying grounded in my own side.");
+    pushUnique(fears, `That ${familyContext.familyReference} will believe the worst about me`);
+    pushUnique(
+      myPart,
+      `I may be giving too much weight to what ${familyContext.familyReference} thinks about me instead of staying grounded in my own side.`
+    );
+    pushUnique(myPart, "I may need a cleaner boundary around this conversation.");
+    pushUnique(patterns, "people_pleasing");
+    pushUnique(
+      acceptance,
+      `I cannot control what ${familyContext.familyReference} hears or believes about me.`
+    );
+    pushUnique(
+      acceptance,
+      `I do not need ${familyContext.familyReference}'s agreement to stay grounded.`
+    );
+    pushUnique(spiritualTruths, `${familyContext.familyReference.charAt(0).toUpperCase() + familyContext.familyReference.slice(1)} does not decide my worth.`);
+    pushUnique(spiritualTruths, "I can stay honest and hold a boundary without a fight.");
+    pushUnique(actions, "Call or text sponsor before reacting");
+    pushUnique(actions, `Write the facts before reacting to ${familyContext.familyReference}`);
+  } else if (isFamily) {
+    pushUnique(feltReactions, "Judged");
+    pushUnique(fears, `That ${familyContext.familyReference} will believe the worst about me`);
+    pushUnique(
+      myPart,
+      "I may be looking for approval from family instead of staying grounded in my own side."
+    );
     pushUnique(myPart, "I may need a cleaner boundary around this conversation.");
     pushUnique(patterns, "people_pleasing");
     pushUnique(acceptance, "They may not see it the way I want them to.");
