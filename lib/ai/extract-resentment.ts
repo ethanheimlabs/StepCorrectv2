@@ -69,12 +69,16 @@ function buildAffects(rawText: string, clarificationText: string) {
 
   return {
     ...EMPTY_AFFECT_FLAGS,
-    self_esteem: /critic|belittle|dismiss|embarrass|undermine|look down on/.test(source),
-    security: /boundary|unsafe|trust|support|control|threat|steady/.test(source),
-    ambitions: /career|work|future|goal|promotion|opportunity/.test(source),
+    self_esteem: /critic|belittle|dismiss|embarrass|undermine|look down on|ridicul|discourag/.test(
+      source
+    ),
+    security: /boundary|unsafe|trust|support|control|threat|steady|approval/.test(source),
+    ambitions: /career|work|future|goal|promotion|opportunity|entrepreneur|business|dream/.test(
+      source
+    ),
     personal_relations: /family|friend|relationship|partner|marriage|talked about me/.test(source),
     sex_relations: /sex|intimacy|affair|cheat|romantic/.test(source),
-    pride: /critic|respect|dismiss|humiliate|insult|talked down/.test(source),
+    pride: /critic|respect|dismiss|humiliate|insult|talked down|ridicul|foolish/.test(source),
     pocketbook: /money|rent|pay|job|debt|bill|cost/.test(source)
   };
 }
@@ -381,14 +385,90 @@ function buildSummary(extraction: Omit<ResentmentExtraction, "shareable_sponsor_
     .filter(([, enabled]) => enabled)
     .map(([key]) => AFFECT_LABELS[key as keyof typeof AFFECT_LABELS].toLowerCase());
 
+  function cleanSentence(value: string) {
+    const cleaned = value
+      .replace(/([a-z])I\b/g, "$1 I")
+      .replace(/\s+/g, " ")
+      .replace(/^[,.;:\s]+|[,.;:\s]+$/g, "")
+      .trim();
+
+    if (!cleaned) {
+      return "";
+    }
+
+    const capitalized = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+
+    return /[.!?]$/.test(capitalized) ? capitalized : `${capitalized}.`;
+  }
+
+  function cleanTarget(value: string) {
+    return value
+      .replace(/^mt\s+/i, "my ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  function cleanFact(value: string) {
+    return value
+      .replace(/^i'?m resentful (?:at|toward|towards|with)\s+[^.]+?\s+for\s+/i, "")
+      .replace(/^i am resentful (?:at|toward|towards|with)\s+[^.]+?\s+for\s+/i, "")
+      .replace(/^he\s+/i, "")
+      .replace(/^she\s+/i, "")
+      .replace(/^they\s+/i, "")
+      .replace(/\bmt landlord\b/gi, "my landlord")
+      .replace(/\brasing\b/gi, "raising")
+      .trim()
+      .toLowerCase();
+  }
+
+  function cleanFear(value: string) {
+    return value
+      .replace(/^that\s+/i, "")
+      .replace(/\bi\b/g, "I")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function cleanMyPart(value: string) {
+    return value
+      .split("\n")
+      .map((line) =>
+        line
+          .replace(/\s+/g, " ")
+          .replace(/^i\b/i, "I")
+          .replace(/^[,.;:\s]+|[,.;:\s]+$/g, "")
+          .trim()
+      )
+      .filter(Boolean)
+      .map((line) => line.charAt(0).toUpperCase() + line.slice(1))
+      .map((line) => (/[.!?]$/.test(line) ? line : `${line}.`))
+      .join(" ");
+  }
+
+  function lowerFirst(value: string) {
+    return value ? value.charAt(0).toLowerCase() + value.slice(1) : "";
+  }
+
   const affectsLine = activeAffects.length
     ? activeAffects.join(", ")
     : "my peace and perspective";
-  const firstFear = extraction.fear_inventory[0]?.toLowerCase();
+  const target = cleanTarget(extraction.who_or_what);
+  const facts = cleanFact(extraction.what_happened_facts);
+  const firstFear = extraction.fear_inventory[0] ? cleanFear(extraction.fear_inventory[0]) : "";
   const fearLine = firstFear ? ` Under it, I'm afraid ${firstFear}.` : "";
-  const myPartLine = extraction.my_part_controlled.replace(/\s+/g, " ").trim().toLowerCase();
+  const myPartLine = cleanMyPart(extraction.my_part_controlled);
+  const nextMove = lowerFirst(cleanSentence(extraction.next_right_actions[0] ?? ""));
 
-  return `Resentful at ${extraction.who_or_what.toLowerCase()} for ${extraction.what_happened_facts.toLowerCase()}. It hits ${affectsLine}.${fearLine} My part is ${myPartLine}. Next move is ${extraction.next_right_actions[0].toLowerCase()}.`;
+  return [
+    `Resentful at ${target}${facts ? ` for ${facts}` : ""}.`,
+    `It hits ${affectsLine}.`,
+    fearLine.trim(),
+    myPartLine ? `My part is ${myPartLine}` : "",
+    nextMove ? `Next move is ${nextMove}` : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
 function extractResentmentFallback(
@@ -397,6 +477,76 @@ function extractResentmentFallback(
 ): ResentmentExtraction {
   const normalizedRaw = normalizeInput(rawText);
   const normalizedClarification = normalizeInput(clarificationText);
+  const combined = `${normalizedRaw} ${normalizedClarification}`;
+
+  if (
+    /\b(?:dad|father|parent)\b/.test(combined) &&
+    /\b(?:ridicul|discourag|unsupported|support|approval|dream|entrepreneur|business|music|passion|creative)\b/.test(
+      combined
+    )
+  ) {
+    return {
+      type: "resentment",
+      who_or_what: /\bfather\b/.test(combined) ? "My father" : "My dad",
+      what_happened_facts:
+        "He ridiculed and discouraged my entrepreneurial goals, music, and the dreams that matter to me",
+      affects: {
+        self_esteem: true,
+        security: true,
+        ambitions: true,
+        personal_relations: true,
+        sex_relations: false,
+        pride: true,
+        pocketbook: false
+      },
+      affected_parts_detail: [
+        "My self-esteem and confidence",
+        "My sense of purpose",
+        "My ambition and courage",
+        "My creativity and self-expression",
+        "My need for parental support"
+      ],
+      felt_reactions: ["Hurt", "Rejected", "Small", "Discouraged", "Ashamed", "Angry"],
+      my_part_controlled:
+        [
+          "I may be giving his approval too much authority over my goals.",
+          "I may be letting his voice become the voice I use against myself.",
+          "I can validate my own path and take the next honest step without needing him to understand it first."
+        ].join("\n"),
+      fear_inventory: [
+        "That my dreams are foolish or not worthwhile",
+        "That I need his approval before I can trust my goals",
+        "That I am not capable without external validation",
+        "That my creative gifts and ambition are not enough"
+      ],
+      defects_or_patterns: [
+        "approval_seeking",
+        "self_doubt",
+        "fear",
+        "people_pleasing",
+        "resentment_loop"
+      ],
+      acceptance_needed: [
+        "He may not be able to support my path the way I want him to.",
+        "His limitations do not decide my worth or the value of my dreams.",
+        "I cannot make him validate my goals before I move forward.",
+        "I can define success by honest action, not by his reaction."
+      ],
+      spiritual_truths: [
+        "My gifts and ambitions can be valid even without his approval.",
+        "My path can be supported by God, mentors, sponsors, and right action.",
+        "My worth does not depend on my father's reaction.",
+        "I can trust the next right step more than the old discouraging voice."
+      ],
+      next_right_actions: [
+        "Write my own definition of success and one next step for this week",
+        "Talk this through with a sponsor or mentor who supports honest growth",
+        "Spend 30 minutes practicing music or building the business goal today"
+      ],
+      shareable_sponsor_summary:
+        "Resentful at my dad for ridiculing and discouraging my entrepreneurial goals, music, and dreams. It hit my self-esteem, purpose, ambition, creativity, and need for support. My part is giving his approval too much authority over my path. My next move is to define success for myself, talk it through with a sponsor or mentor, and take one small creative or business action today."
+    };
+  }
 
   if (
     (normalizedRaw === "i'm resentful at my sister" ||

@@ -74,7 +74,10 @@ function classifyInventoryFallback(rawText: string): ClassificationResult {
   }
 
   const isFear = /\bfear|afraid|anxious|panic|worried\b/i.test(rawText);
-  const isResentment = /\bresent|angry|mad|bitter|upset|hurt\b/i.test(rawText);
+  const isResentment =
+    /\bresent|angry|mad|bitter|upset|hurt|ridicul|discourag|dismiss|unsupported|belittle\b/i.test(
+      rawText
+    );
   const needsClarification =
     normalized.split(" ").length < 8 || !/\b(?:because|when|after|for|about)\b/i.test(rawText);
 

@@ -26,9 +26,10 @@ export async function POST(
     const body = (await request.json()) as unknown;
     const review = validateResentmentExtraction(body);
     const entry = await saveReviewedInventory(params.id, review);
-    const nextPath = `/app/inventory/${entry.id}/actions`;
+    const nextPath = `/app/inventory/${entry.id}/breakdown`;
 
     revalidatePath(nextPath);
+    revalidatePath(`/app/inventory/${entry.id}/actions`);
     revalidatePath("/app");
 
     return NextResponse.json({
